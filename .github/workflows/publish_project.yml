@@ -25,13 +25,13 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.AWS_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan ec2-34-239-129-207.compute-1.amazonaws.com >> ~/.ssh/known_hosts
           echo "StrictHostKeyChecking no" >> ~/.ssh/config
 
       - name: SSH into EC2 and Execute Commands
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.EC2_HOST }}
+          host: ec2-34-239-129-207.compute-1.amazonaws.com
           username: ec2-user
           key: ${{ secrets.AWS_SSH_KEY }}
           port: 22
