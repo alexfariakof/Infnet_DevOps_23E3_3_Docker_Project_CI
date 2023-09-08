@@ -12,19 +12,52 @@ jobs:
 
     runs-on: ubuntu-latest
 
+  build-docker-image:
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: Build the Docker image and Publish
-      run: |
-        docker-compose -f docker-compose.prod.yml build        
-        mkdir -p ~/.ssh
-        echo "${{ secrets.AWS_SSH_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts     
-        pwd
-        IMAGEM="alexfariakof/infnet-devops-project"
-        container_id=$(docker ps -a -q --filter "ancestor=$IMAGEM")
-        image_id=$(docker images --format "{{.ID}}" "$IMAGEM")
-        echo $container_id
-        docker rm --force $container_id
-        docker run -d -p 42537:42537 $IMAGEM            
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build Docker image
+        run: |
+          docker-compose -f docker-compose.prod.yml build
+
+  ssh-connection:
+    runs-on: ubuntu-latest
+    needs: build-docker-image
+    steps:
+      - name: Configure SSH and Copy Private Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.AWS_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
+  deploy-to-server:
+    runs-on: ubuntu-latest
+    needs: ssh-connection
+    steps:
+      - name: Copy Docker image to EC2
+        run: |
+          scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no path/to/your/docker-image.tar.gz ec2-user@${{ secrets.EC2_HOST }}:/path/to/destination/
+ 
+      - name: SSH into EC2 and Execute Commands
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.AWS_SSH_KEY }}
+          port: 22
+          script: |
+            # Loading Docker image compilada pelo git action
+            docker load -i /path/to/destination/docker-image.tar.gz
+            
+            # Excluindo o arquivo da imagem após o carregamento
+            rm -f /path/to/destination/docker-image.tar.gz    
+            pwd
+            IMAGEM="alexfariakof/infnet-devops-project"
+            container_id=$(docker ps -a -q --filter "ancestor=$IMAGEM")
+            image_id=$(docker images --format "{{.ID}}" "$IMAGEM")
+            echo $container_id
+            docker rm --force $container_id
+            docker run -d -p 42537:42537 $IMAGEM            
