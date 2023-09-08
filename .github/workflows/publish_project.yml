@@ -24,5 +24,6 @@ jobs:
         IMAGEM="alexfariakof/infnet-devops-project"
         container_id=$(docker ps -a -q --filter "ancestor=$IMAGEM")
         image_id=$(docker images --format "{{.ID}}" "$IMAGEM")
+        echo container_id
         docker rm --force $container_id
         docker run -d -p 42537:42537 $IMAGEM            
