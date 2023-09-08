@@ -18,12 +18,17 @@ jobs:
       run: |
         docker build . --file Infnet_DevOps_23E3_3_Docker_Project/Dockerfile --tag infnet-devops-project
         IMAGEM="infnet-devops-project"
+    - name: Configure SSH and Copy Private Key
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.AWS_SSH_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts        
     - name: Conectar ao servidor EC2 com SSH
       uses: appleboy/ssh-action@master
       with:
           host: ${{ secrets.EC2_HOST }}
           username: ec2-user
-          key: ${{ secrets.AWS_SSH_KEY }}
           port: 22
           script: 
             container_id=$(docker ps -q --filter "ancestor=$IMAGEM")
