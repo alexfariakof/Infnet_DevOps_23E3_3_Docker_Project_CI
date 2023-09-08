@@ -20,16 +20,14 @@ jobs:
         run: |
           docker-compose -f docker-compose.prod.yml build
 
-      - name: Configure SSH and Copy Private Key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.AWS_SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
-
-      - name: SSH into EC2 and Execute Commands
+      - name: SSH into EC2 and Execute Commands  
         uses: appleboy/ssh-action@master
         with:
+          run: |
+            mkdir -p ~/.ssh
+            echo "${{ secrets.AWS_SSH_KEY }}" > ~/.ssh/id_rsa
+            chmod 600 ~/.ssh/id_rsa
+            ssh-keyscan ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
           host: ${{ secrets.EC2_HOST }}
           username: ec2-user
           key: ${{ secrets.AWS_SSH_KEY }}
