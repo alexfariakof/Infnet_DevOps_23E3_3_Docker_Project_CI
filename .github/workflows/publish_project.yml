@@ -27,10 +27,6 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Copy Docker image to EC2
-        run: |
-          scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no /home/ec2-user/docker-image.tar.gz ec2-user@ec2-34-239-129-207.compute-1.amazonaws.com:/home/ec2-user/
-
       - name: SSH into EC2 and Execute Commands
         uses: appleboy/ssh-action@master
         with:
@@ -39,8 +35,6 @@ jobs:
           key: ${{ secrets.AWS_SSH_KEY }}
           port: 22
           script: |
-            docker load -i /home/ec2-user/docker-image.tar.gz
-            rm -f /home/ec2-user/docker-image.tar.gz    
             pwd
             IMAGEM="alexfariakof/infnet-devops-project"
             container_id=$(docker ps -a -q --filter "ancestor=$IMAGEM")
