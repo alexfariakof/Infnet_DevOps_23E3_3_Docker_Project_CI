@@ -28,6 +28,21 @@ jobs:
           ssh-keyscan ec2-34-239-129-207.compute-1.amazonaws.com >> ~/.ssh/known_hosts
           echo "StrictHostKeyChecking no" >> ~/.ssh/config
 
+      - name: Check SSH Configuration
+        run: |
+            if [ -f ~/.ssh/id_rsa ]; then
+                echo "SSH Private Key configured successfully."
+            else
+                echo "SSH Private Key configuration failed."
+                exit 1
+            fi
+            if [ -f ~/.ssh/known_hosts ]; then
+                echo "SSH known_hosts configured successfully."
+            else
+                echo "SSH known_hosts configuration failed."
+                exit 1
+            fi
+
       - name: SSH into EC2 and Execute Commands
         uses: appleboy/ssh-action@master
         with:
