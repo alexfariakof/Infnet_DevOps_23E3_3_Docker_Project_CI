@@ -48,6 +48,9 @@ jobs:
                 exit 1
             fi
 
+      - name: Debug SSH Key
+        run: cat ~/.ssh/id_rsa
+
       - name: SSH into EC2 and Execute Commands
         uses: appleboy/ssh-action@master
         with:
