@@ -29,7 +29,7 @@ jobs:
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ec2-user
-          key: ${{ secrets.AWS_SSH_KEY }}
+          key: ~/.ssh/id_rsa
           port: 22
           script: |
             echo "Hello Git Actions"
