@@ -22,10 +22,12 @@ jobs:
 
       - name: Configure SSH and Copy Private Key
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.AWS_SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+            mkdir -p ~/.ssh
+            echo "${{ secrets.AWS_SSH_KEY }}" > ~/.ssh/id_rsa
+            chmod 400 ~/.ssh/id_rsa
+            ssh-keyscan ec2-34-239-129-207.compute-1.amazonaws.com >> ~/.ssh/known_hosts
+            chmod 644 ~/.ssh/known_hosts
+            ssh -i ~/.ssh/id_rsa ec2-34-239-129-207.compute-1.amazonaws.com "echo SSH connection established"
 
       - name: Copy Docker image to EC2
         run: |
