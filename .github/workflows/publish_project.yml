@@ -1,0 +1,36 @@
+name: Publish Project In AWS
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: |
+        docker build . --file Dockerfile --tag infnet-devops-project
+        IMAGEM="infnet-devops-project"
+    - name: Conectar ao servidor EC2 com SSH
+      uses: appleboy/ssh-action@master
+      with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.AWS_SSH_KEY }} # Segredo que contém a chave privada PEM
+          port: 22
+          script: 
+            container_id=$(docker ps -q --filter "ancestor=$IMAGEM")
+            image_id=$(docker images --format "{{.ID}}" "$IMAGEM")
+            docker rm --force $container_id
+            docker rmi --force $image_id                        
+            docker run -d -p 6000:6000 $IMAGEM            
+            container_id=$(docker ps -q --filter "ancestor=$IMAGEM")
+            docker cp /home/ec2-user/appsettings.json $container_id:/app
+            docker restart $container_id
