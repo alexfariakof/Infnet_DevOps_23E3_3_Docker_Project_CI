@@ -28,7 +28,7 @@ jobs:
       - name: Configure SSH and Copy Private Key
         run: |
           mkdir -p ~/.ssh
-          echo ${{ secrets.AWS_SSH_KEY }} > ~/.ssh/id_rsa
+          echo "${{ secrets.AWS_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan ec2-34-239-129-207.compute-1.amazonaws.com >> ~/.ssh/known_hosts
           echo "StrictHostKeyChecking no" >> ~/.ssh/config
@@ -56,7 +56,7 @@ jobs:
         with:
           host: ec2-34-239-129-207.compute-1.amazonaws.com
           username: ec2-user
-          key: ~/.ssh/id_rsa
+          key: cat ~/.ssh/id_rsa
           port: 22
           script: |
             echo "Hello Git Actions"
