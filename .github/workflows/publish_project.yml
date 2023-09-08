@@ -16,7 +16,8 @@ jobs:
     - uses: actions/checkout@v3
     - name: Build the Docker image and Publish
       run: |
-        docker build . --file Infnet_DevOps_23E3_3_Docker_Project/Dockerfile --tag alexfariakof/infnet-devops-project
+        #docker build . --file Infnet_DevOps_23E3_3_Docker_Project/Dockerfile-Production --tag alexfariakof/infnet-devops-project
+        docker-compose -f docker-compose.prod.yml build
         IMAGEM="alexfariakof/infnet-devops-project"
         mkdir -p ~/.ssh
         echo "${{ secrets.AWS_SSH_KEY }}" > ~/.ssh/id_rsa
@@ -25,4 +26,4 @@ jobs:
         container_id=$(docker ps -q --filter "ancestor=$IMAGEM")
         image_id=$(docker images --format "{{.ID}}" "$IMAGEM")
         docker rm --force $container_id
-        docker run -d -p 6000:6000 $IMAGEM            
+        docker run -d -p 6001:6001 $IMAGEM            
