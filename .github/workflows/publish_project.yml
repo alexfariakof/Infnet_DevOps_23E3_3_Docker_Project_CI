@@ -25,11 +25,11 @@ jobs:
           echo "StrictHostKeyChecking no" >> ~/.ssh/config
 
       - name: SSH into EC2 and Execute Commands
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@v0.1.7
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ec2-user
-          key: ~/.ssh/id_rsa
+          key: ${{ secrets.AWS_SSH_KEY }}
           port: 22
           script: |
             echo "Hello Git Actions"
