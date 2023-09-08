@@ -28,17 +28,13 @@ jobs:
           ssh-keyscan ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
       - name: SSH into EC2 and Execute Commands
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ec2-user
-          key: ${{ secrets.AWS_SSH_KEY }}
-          port: 22
-          script: |
-            pwd
-            IMAGEM="alexfariakof/infnet-devops-project"
-            container_id=$(docker ps -a -q --filter "ancestor=$IMAGEM")
-            image_id=$(docker images --format "{{.ID}}" "$IMAGEM")
-            echo $container_id
-            docker rm --force $container_id
-            docker run -d -p 42537:42537 $IMAGEM
+        run: |
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
+          pwd
+          IMAGEM="alexfariakof/infnet-devops-project"
+          container_id=$(docker ps -a -q --filter "ancestor=$IMAGEM")
+          image_id=$(docker images --format "{{.ID}}" "$IMAGEM")
+          echo $container_id
+          docker rm --force $container_id
+          docker run -d -p 42537:42537 $IMAGEM
+          EOF
