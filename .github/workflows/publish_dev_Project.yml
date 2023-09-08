@@ -16,7 +16,6 @@ jobs:
     - uses: actions/checkout@v3
     - name: Build the Docker image and Publish
       run: |
-        #docker build . --file Infnet_DevOps_23E3_3_Docker_Project/Dockerfile-Development --tag alexfariakof/infnet-devops-project-dev
         docker-compose -f docker-compose.dev.yml build
         IMAGEM="alexfariakof/infnet-devops-project-dev"
         mkdir -p ~/.ssh
