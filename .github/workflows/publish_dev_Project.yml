@@ -22,7 +22,7 @@ jobs:
         echo "${{ secrets.AWS_SSH_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts        
-        container_id=$(docker ps -q --filter "ancestor=$IMAGEM")
+        container_id=$(docker ps -a -q --filter "ancestor=$IMAGEM")
         image_id=$(docker images --format "{{.ID}}" "$IMAGEM")
         docker rm --force $container_id
-        docker run -d -p 6001:6001 $IMAGEM        
+        docker run -d -p 42536:42536 $IMAGEM        
