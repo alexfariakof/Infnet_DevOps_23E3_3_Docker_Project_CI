@@ -14,12 +14,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Build the Docker image
+    - name: Build the Docker image and Publish
       run: |
         docker build . --file Infnet_DevOps_23E3_3_Docker_Project/Dockerfile --tag alexfariakof/infnet-devops-project
         IMAGEM="alexfariakof/infnet-devops-project"
-    - name: Configura SSH e Conecta ao servidor EC2 com SSH
-      run: |
         mkdir -p ~/.ssh
         echo "${{ secrets.AWS_SSH_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
