@@ -49,10 +49,7 @@ jobs:
           key: ${{ secrets.AWS_SSH_KEY }}
           port: 22
           script: |
-            # Loading Docker image compilada pelo git action
             docker load -i /path/to/destination/docker-image.tar.gz
-            
-            # Excluindo o arquivo da imagem após o carregamento
             rm -f /path/to/destination/docker-image.tar.gz    
             pwd
             IMAGEM="alexfariakof/infnet-devops-project"
