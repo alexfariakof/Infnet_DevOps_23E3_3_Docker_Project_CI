@@ -52,11 +52,13 @@ jobs:
         run: cat ~/.ssh/id_rsa
 
       - name: SSH into EC2 and Execute Commands
+        env:
+          AWS_SSH_KEY: ${{ secrets.AWS_SSH_KEY }}  
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ec2-34-239-129-207.compute-1.amazonaws.com
           username: ec2-user
-          key: ${{ secrets.AWS_SSH_KEY }}
+          key: "${{ secrets.AWS_SSH_KEY }}"
           port: 22
           script: |
             echo "Hello Git Actions"
