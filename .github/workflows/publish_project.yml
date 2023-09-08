@@ -16,49 +16,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set AWS Credentials
-        run: |
-          aws configure set aws_access_key_id ${{ secrets.aws_access_key_id }}
-          aws configure set aws_secret_access_key ${{ secrets.aws_secret_access_key }}
-
-      - name: Build Docker image
-        run: |
-          docker-compose -f docker-compose.prod.yml build
-
-      - name: Configure SSH and Copy Private Key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.AWS_SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan ec2-34-239-129-207.compute-1.amazonaws.com >> ~/.ssh/known_hosts
-          echo "StrictHostKeyChecking no" >> ~/.ssh/config
-
-      - name: Check SSH Configuration
-        run: |
-            if [ -f ~/.ssh/id_rsa ]; then
-                echo "SSH Private Key configured successfully."
-            else
-                echo "SSH Private Key configuration failed."
-                exit 1
-            fi
-            if [ -f ~/.ssh/known_hosts ]; then
-                echo "SSH known_hosts configured successfully."
-            else
-                echo "SSH known_hosts configuration failed."
-                exit 1
-            fi
-
-      - name: Debug SSH Key
-        run: cat ~/.ssh/id_rsa
-
       - name: SSH into EC2 and Execute Commands
-        env:
-          AWS_SSH_KEY: ${{ secrets.AWS_SSH_KEY }}  
-        uses: appleboy/ssh-action@v1.0.0
+        uses: appleboy/ssh-action@master
         with:
-          host: ec2-34-239-129-207.compute-1.amazonaws.com
+          host: ${{ secrets.EC2_HOST }}
           username: ec2-user
           key: ${{ secrets.AWS_SSH_KEY }}
-          port: 22
           script: |
             echo "Hello Git Actions"
