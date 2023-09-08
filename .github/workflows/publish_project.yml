@@ -25,8 +25,4 @@ jobs:
         container_id=$(docker ps -q --filter "ancestor=$IMAGEM")
         image_id=$(docker images --format "{{.ID}}" "$IMAGEM")
         docker rm --force $container_id
-        docker rmi --force $image_id                        
         docker run -d -p 6000:6000 $IMAGEM            
-        container_id=$(docker ps -q --filter "ancestor=$IMAGEM")
-        docker cp /home/ec2-user/appsettings.json $container_id:/app
-        docker restart $container_id
