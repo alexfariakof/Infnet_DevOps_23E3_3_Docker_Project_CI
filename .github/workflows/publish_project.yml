@@ -56,7 +56,7 @@ jobs:
         with:
           host: ec2-34-239-129-207.compute-1.amazonaws.com
           username: ec2-user
-          key: cat ~/.ssh/id_rsa
+          key: ~/.ssh/id_rsa
           port: 22
           script: |
             echo "Hello Git Actions"
