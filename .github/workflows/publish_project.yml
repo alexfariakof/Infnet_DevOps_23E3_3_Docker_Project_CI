@@ -25,16 +25,16 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.AWS_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan ec2-user@ec2-34-239-129-207.compute-1.amazonaws.com:/home/ec2-user/ >> ~/.ssh/known_hosts
 
       - name: Copy Docker image to EC2
         run: |
-          scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no /home/ec2-user/docker-image.tar.gz ec2-user@${{ secrets.EC2_HOST }}:/home/ec2-user/
+          scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no /home/ec2-user/docker-image.tar.gz ec2-user@ec2-34-239-129-207.compute-1.amazonaws.com:/home/ec2-user/
 
       - name: SSH into EC2 and Execute Commands
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.EC2_HOST }}
+          host: ec2-34-239-129-207.compute-1.amazonaws.com
           username: ec2-user
           key: ${{ secrets.AWS_SSH_KEY }}
           port: 22
