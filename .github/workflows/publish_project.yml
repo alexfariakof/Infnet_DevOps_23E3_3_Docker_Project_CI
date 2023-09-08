@@ -29,6 +29,7 @@ jobs:
 
       - name: Copy Docker image to EC2
         run: |
+          pwd
           scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no path/to/your/docker-image.tar.gz ec2-user@${{ secrets.EC2_HOST }}:/path/to/destination/
 
       - name: SSH into EC2 and Execute Commands
