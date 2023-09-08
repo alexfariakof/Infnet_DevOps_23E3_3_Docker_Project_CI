@@ -20,7 +20,8 @@ jobs:
         mkdir -p ~/.ssh
         echo "${{ secrets.AWS_SSH_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts        
+        ssh-keyscan ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts     
+        pwd
         IMAGEM="alexfariakof/infnet-devops-project"
         container_id=$(docker ps -a -q --filter "ancestor=$IMAGEM")
         image_id=$(docker images --format "{{.ID}}" "$IMAGEM")
