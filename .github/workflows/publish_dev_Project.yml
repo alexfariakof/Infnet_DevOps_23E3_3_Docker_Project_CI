@@ -2,9 +2,9 @@ name: Publish Project In AWS
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "pre-release" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "pre-release" ]
 
 jobs:
 
