@@ -29,7 +29,6 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.AWS_SSH_KEY }}
-          passphrase: ${{ secrets.AWS_SSH_KEY }}
           port: 22
           script: |            
             echo "Hello GitActions"
