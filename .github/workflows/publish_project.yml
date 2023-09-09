@@ -13,17 +13,43 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-            -   uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-            -   name: Setup SSH Keys and known_hosts
-                env:
-                    SSH_AUTH_SOCK: /tmp/ssh_agent.sock
-                    AWS_SSH_KEY: ${{ secrets.AWS_SSH_KEY }}
-                run: |
-                    ssh-agent -a $SSH_AUTH_SOCK > /dev/null
-                    ssh-add - <<< $AWS_SSH_KEY
+      #- name: Debug Information
+        #run: |
+           #echo "Current Directory: $(pwd)"
+           #echo "Contents of Directory: $(ls)"
+           #echo "Value of Variable XYZ: $XYZ"      
 
-            -   name: Some task that fetches dependencies
-                env:
-                    SSH_AUTH_SOCK: /tmp/ssh_agent.sock
-                run: echo "Hello GitActions with AWS"
+      #- name: Build Docker image
+        #run: |
+          #docker-compose -f docker-compose.prod.yml build
+
+      - name: Configure SSH and Copy Private Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.AWS_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+          echo "StrictHostKeyChecking no" >> ~/.ssh/config
+
+      - name: Execute SSH Commands into EC2 
+        env:
+           EC2_HOST: ${{ secrets.EC2_HOST }}
+           EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
+           AWS_SSH_KEY: ${{ secrets.AWS_SSH_KEY }}
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.AWS_SSH_KEY }}
+          port: 22
+          script: |            
+            echo "Hello GitActions"
+            #IMAGEM="alexfariakof/infnet-devops-project"
+            #container_id=$(docker ps -a -q --filter "ancestor=$IMAGEM")
+            #image_id=$(docker images --format "{{.ID}}" "$IMAGEM")
+            #echo $container_id
+            #docker rm --force $container_id
+            #docker run -d -p 42537:42537 $IMAGEM
