@@ -24,7 +24,7 @@ jobs:
 
       - name: Verify Secret Value
         run: | 
-            echo ${{ secrets.AWS_SSH_KEY }}
+            echo "${{ secrets.AWS_SSH_KEY }}"
 
       - name: Configure SSH and Copy Private Key
         run: |
