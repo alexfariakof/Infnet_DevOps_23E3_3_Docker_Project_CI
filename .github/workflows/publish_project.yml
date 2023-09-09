@@ -16,7 +16,7 @@ jobs:
 
       - name: Build & Deploy
         env:
-          PRIVATE_KEY: ${{ secrets.AWS_SSH_KEY }}
+          PRIVATE_KEY: ${{ secrets.!!AWS_SSH_KEY }}
           HOSTNAME: ${{ secrets.EC2_HOST }}
           USER_NAME: ec2-user
         run: |
