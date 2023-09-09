@@ -20,7 +20,6 @@ jobs:
             HOSTNAME: ${{ secrets.EC2_HOST }}
             USER_NAME: ec2-user
 
-
       - name: Debug Information
         run: |
            echo "Current Directory: $(pwd)"
@@ -29,14 +28,14 @@ jobs:
 
       - name: Verify Secret Value
         run: | 
-            echo "${{ secrets.AWS_SSH_KEY }}"
+            echo "$PRIVATE_KEY"  # This will print the private key, useful for debugging
 
-      - name: Configure SSH and Copy Private Key
+      - name: Configure SSH and Add Private Key to SSH Agent
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.AWS_SSH_KEY }}" > ~/.ssh/id_rsa
+          echo "$PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 400 ~/.ssh/id_rsa 
-          ssh-keyscan ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan $HOSTNAME >> ~/.ssh/known_hosts
           echo "StrictHostKeyChecking no" >> ~/.ssh/config
 
       - name: Start SSH Agent and Add Private Key
@@ -46,6 +45,5 @@ jobs:
 
       - name: SSH into EC2 and Execute Commands
         run: |
-          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
+          ssh -o StrictHostKeyChecking=no ${USER_NAME}@${HOSTNAME} '
           echo "Hello Git Actions"'
