@@ -15,6 +15,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        env:
+            PRIVATE_KEY: ${{ secrets.AWS_SSH_KEY }}
+            HOSTNAME: ${{secrets.EC2_HOST}}
+            USER_NAME: ec2-user
+
 
       - name: Debug Information
         run: |
@@ -40,10 +45,6 @@ jobs:
             ssh-add ~/.ssh/id_rsa
 
       - name: SSH into EC2 and Execute Commands
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ec2-user
-          key: ${{ secrets.AWS_SSH_KEY }}
-          port: 22
-          script: echo "Hello Git Actions"
+        run: |
+          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
