@@ -1,4 +1,4 @@
-name: Publish Project In AWS
+name: Publish Project Development In AWS
 
 on:
   push:
