@@ -14,7 +14,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Build the Docker image and Publish
+    
+    - name: Build Docker image and Publish
       run: |
         docker-compose -f docker-compose.dev.yml build        
         mkdir -p ~/.ssh
