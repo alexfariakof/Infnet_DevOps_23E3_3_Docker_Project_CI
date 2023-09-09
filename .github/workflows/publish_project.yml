@@ -39,7 +39,7 @@ jobs:
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
-          key: ~/.ssh/id_rsa
+          key: ${{ secrets.AWS_SSH_KEY }}
           passphrase: ${{ secrets.EC2_PASSPHRASE }}
           port: 22
           script: |            
