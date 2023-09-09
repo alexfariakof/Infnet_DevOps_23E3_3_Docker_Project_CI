@@ -7,28 +7,39 @@ on:
     branches: [ "main" ]
 
 jobs:
+
   build:
+
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Debug Information
-        run: |
-           echo "Current Directory: $(pwd)"
-           echo "Contents of Directory: $(ls)"
-           echo "Value of Variable XYZ: $XYZ"      
+      #- name: Debug Information
+        #run: |
+           #echo "Current Directory: $(pwd)"
+           #echo "Contents of Directory: $(ls)"
+           #echo "Value of Variable XYZ: $XYZ"      
 
       #- name: Build Docker image
         #run: |
           #docker-compose -f docker-compose.prod.yml build
+
+      - name: Configure SSH and Copy Private Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.AWS_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+          echo "StrictHostKeyChecking no" >> ~/.ssh/config
 
       - name: Execute SSH Commands into EC2 
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.AWS_SSH_KEY }}
+          key: ~/.ssh/id_rsa
           port: 22
           script: |            
             echo "Hello GitActions"
