@@ -18,6 +18,7 @@ jobs:
             -   name: Setup SSH Keys and known_hosts
                 env:
                     SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+                    AWS_SSH_KEY: ${{ secrets.AWS_SSH_KEY }}
                 run: |
                     ssh-agent -a $SSH_AUTH_SOCK > /dev/null
                     ssh-add - <<< "${{ secrets.AWS_SSH_KEY }}"
