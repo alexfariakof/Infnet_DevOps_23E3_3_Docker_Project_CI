@@ -15,6 +15,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      
+      - name: Verify Secret Value
+        run: echo ${{ secrets.AWS_SSH_KEY }}
 
       - name: Configure SSH and Copy Private Key
         run: |
