@@ -1,0 +1,14 @@
+# Please refer https://aka.ms/HTTPSinContainer on how to setup an https developer certificate for your ASP.NET Core service.
+
+version: '3.4'
+
+services:
+  infnetdevops23e33dockerproject:
+    image: alexfariakof/infnet-devops-project
+    build:
+      context: .
+      dockerfile: Infnet_DevOps_23E3_3_Docker_Project/Dockerfile-Production
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production      
+    ports:
+      - 42537:42537

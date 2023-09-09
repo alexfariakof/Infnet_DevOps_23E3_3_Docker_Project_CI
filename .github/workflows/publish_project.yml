@@ -1,4 +1,4 @@
-name: Publish Project In AWS
+name: Publish Project Production In AWS
 
 on:
   push:
@@ -13,16 +13,38 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Build the Docker image and Publish
-      run: |
-        docker build . --file Infnet_DevOps_23E3_3_Docker_Project/Dockerfile --tag alexfariakof/infnet-devops-project
-        IMAGEM="alexfariakof/infnet-devops-project"
-        mkdir -p ~/.ssh
-        echo "${{ secrets.AWS_SSH_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts        
-        container_id=$(docker ps -q --filter "ancestor=$IMAGEM")
-        image_id=$(docker images --format "{{.ID}}" "$IMAGEM")
-        docker rm --force $container_id
-        docker run -d -p 6000:6000 $IMAGEM            
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Debug Information
+        run: |
+           echo "Current Directory: $(pwd)"
+           echo "Contents of Directory: $(ls)"
+           echo "Value of Variable XYZ: $XYZ"      
+
+      - name: Build Docker image
+        run: |
+          docker-compose -f docker-compose.prod.yml build
+
+      - name: Configure SSH and Copy Private Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.AWS_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+          echo "StrictHostKeyChecking no" >> ~/.ssh/config
+
+      #- name: Execute SSH Commands into EC2 
+        #uses: appleboy/ssh-action@master
+        #with:
+          #host: ${{ secrets.EC2_HOST }}
+          #username: ec2-user
+          #key: ${{ secrets.AWS_SSH_KEY }}
+          #port: 22
+          #script: |            
+            #IMAGEM="alexfariakof/infnet-devops-project"
+            #container_id=$(docker ps -a -q --filter "ancestor=$IMAGEM")
+            #image_id=$(docker images --format "{{.ID}}" "$IMAGEM")
+            #echo $container_id
+            #docker rm --force $container_id
+            #docker run -d -p 42537:42537 $IMAGEM

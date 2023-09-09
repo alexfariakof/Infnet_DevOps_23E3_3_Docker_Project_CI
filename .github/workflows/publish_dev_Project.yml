@@ -1,0 +1,29 @@
+name: Publish Project Development In AWS
+
+on:
+  push:
+    branches: [ "pre-release" ]
+  pull_request:
+    branches: [ "pre-release" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Build Docker image and Publish
+      run: |
+        docker-compose -f docker-compose.dev.yml build        
+        mkdir -p ~/.ssh
+        echo "${{ secrets.AWS_SSH_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts        
+        IMAGEM="alexfariakof/infnet-devops-project-dev"
+        container_id=$(docker ps -a -q --filter "ancestor=$IMAGEM")
+        image_id=$(docker images --format "{{.ID}}" "$IMAGEM")
+        docker rm --force $container_id
+        docker run -d -p 42536:42536 $IMAGEM        
