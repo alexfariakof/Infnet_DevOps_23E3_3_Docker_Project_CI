@@ -26,14 +26,6 @@ jobs:
         #run: |
           #docker-compose -f docker-compose.prod.yml build
 
-      - name: Configure SSH and Copy Private Key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.AWS_SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
-          echo "StrictHostKeyChecking no" >> ~/.ssh/config
-
       - name: Execute SSH Commands into EC2 
         env:
            EC2_HOST: ${{ secrets.EC2_HOST }}
@@ -43,7 +35,7 @@ jobs:
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.AWS_SSH_KEY }}
+          key: $AWS_SSH_KEY
           port: 22
           script: |            
             echo "Hello GitActions"
