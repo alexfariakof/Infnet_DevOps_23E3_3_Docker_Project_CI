@@ -40,6 +40,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ~/.ssh/id_rsa
+          passphrase: ${{ secrets.EC2_PASSPHRASE }}
           port: 22
           script: |            
             echo "Hello GitActions"
