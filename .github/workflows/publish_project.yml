@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v2
         env:
             PRIVATE_KEY: ${{ secrets.AWS_SSH_KEY }}
-            HOSTNAME: ${{secrets.EC2_HOST}}
+            HOSTNAME: ${{ secrets.EC2_HOST }}
             USER_NAME: ec2-user
 
 
