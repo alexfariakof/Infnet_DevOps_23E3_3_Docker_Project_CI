@@ -13,24 +13,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
+      - name: Build & Deploy        
         env:
             PRIVATE_KEY: ${{ secrets.AWS_SSH_KEY }}
             HOSTNAME: ${{ secrets.EC2_HOST }}
             USER_NAME: ec2-user
-
-      - name: Debug Information
-        run: |
-           echo "Current Directory: $(pwd)"
-           echo "Contents of Directory: $(ls)"
-           echo "Value of Variable XYZ: $XYZ"      
-
-      - name: Verify Secret Value
-        run: | 
-            echo ${PRIVATE_KEY}
-
-      - name: SSH into EC2 and Execute Commands
         run: |
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
           ssh -o StrictHostKeyChecking=no ${USER_NAME}@${HOSTNAME} '
