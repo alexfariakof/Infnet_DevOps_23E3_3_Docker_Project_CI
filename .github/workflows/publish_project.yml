@@ -26,25 +26,18 @@ jobs:
         run: |
           docker-compose -f docker-compose.prod.yml build
 
-      - name: Configure SSH and Copy Private Key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.AWS_SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
-          echo "StrictHostKeyChecking no" >> ~/.ssh/config
-
-      #- name: Execute SSH Commands into EC2 
-        #uses: appleboy/ssh-action@master
-        #with:
-          #host: ${{ secrets.EC2_HOST }}
-          #username: ec2-user
-          #key: ${{ secrets.AWS_SSH_KEY }}
-          #port: 22
-          #script: |            
-            #IMAGEM="alexfariakof/infnet-devops-project"
-            #container_id=$(docker ps -a -q --filter "ancestor=$IMAGEM")
-            #image_id=$(docker images --format "{{.ID}}" "$IMAGEM")
-            #echo $container_id
-            #docker rm --force $container_id
-            #docker run -d -p 42537:42537 $IMAGEM
+      - name: Execute SSH Commands into EC2 
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.AWS_SSH_KEY }}
+          passphrase: ${{ secrets.AWS_SSH_KEY }}
+          port: 22
+          script: |            
+            IMAGEM="alexfariakof/infnet-devops-project"
+            container_id=$(docker ps -a -q --filter "ancestor=$IMAGEM")
+            image_id=$(docker images --format "{{.ID}}" "$IMAGEM")
+            echo $container_id
+            docker rm --force $container_id
+            docker run -d -p 42537:42537 $IMAGEM
