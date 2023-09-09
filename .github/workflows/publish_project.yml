@@ -33,17 +33,29 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
           echo "StrictHostKeyChecking no" >> ~/.ssh/config
+      
+            - name: Setup SSH Keys and known_hosts
+              env:
+                  SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+                  run: |
+                    ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+                    ssh-add - <<< "${{ secrets.AWS_SSH_KEY }}"
 
-      - name: Execute SSH Commands into EC2 
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.AWS_SSH_KEY }}
-          passphrase: ${{ secrets.EC2_PASSPHRASE }}
-          port: 22
-          script: |            
-            echo "Hello GitActions"
+            - name: Some task that fetches dependencies
+              env:
+                 SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+                 run: echo "Hello AWS with GitActions"
+
+      #- name: Execute SSH Commands into EC2 
+        #uses: appleboy/ssh-action@master
+        #with:
+          #host: ${{ secrets.EC2_HOST }}
+          #username: ${{ secrets.EC2_USERNAME }}
+          #key: ${{ secrets.AWS_SSH_KEY }}
+          #passphrase: ${{ secrets.EC2_PASSPHRASE }}
+          #port: 22
+          #script: |            
+            #echo "Hello GitActions"
             #IMAGEM="alexfariakof/infnet-devops-project"
             #container_id=$(docker ps -a -q --filter "ancestor=$IMAGEM")
             #image_id=$(docker images --format "{{.ID}}" "$IMAGEM")
