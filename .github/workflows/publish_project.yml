@@ -28,20 +28,7 @@ jobs:
 
       - name: Verify Secret Value
         run: | 
-            echo "$PRIVATE_KEY"  # This will print the private key, useful for debugging
-
-      - name: Configure SSH and Add Private Key to SSH Agent
-        run: |
-          mkdir -p ~/.ssh
-          echo "$PRIVATE_KEY" > ~/.ssh/id_rsa
-          chmod 400 ~/.ssh/id_rsa 
-          ssh-keyscan $HOSTNAME >> ~/.ssh/known_hosts
-          echo "StrictHostKeyChecking no" >> ~/.ssh/config
-
-      - name: Start SSH Agent and Add Private Key
-        run: |
-            eval $(ssh-agent -s)
-            ssh-add ~/.ssh/id_rsa
+            echo "$PRIVATE_KEY"
 
       - name: SSH into EC2 and Execute Commands
         run: |
