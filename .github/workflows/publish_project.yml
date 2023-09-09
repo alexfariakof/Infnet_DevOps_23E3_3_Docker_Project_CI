@@ -15,9 +15,16 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      
+
+      - name: Debug Information
+        run: |
+           echo "Current Directory: $(pwd)"
+           echo "Contents of Directory: $(ls)"
+           echo "Value of Variable XYZ: $XYZ"      
+
       - name: Verify Secret Value
-        run: echo ${{ secrets.AWS_SSH_KEY }}
+        run: | 
+            echo ${{ secrets.AWS_SSH_KEY }}
 
       - name: Configure SSH and Copy Private Key
         run: |
