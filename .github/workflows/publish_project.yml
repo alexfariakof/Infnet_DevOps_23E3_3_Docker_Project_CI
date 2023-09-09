@@ -32,5 +32,6 @@ jobs:
 
       - name: SSH into EC2 and Execute Commands
         run: |
+          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
           ssh -o StrictHostKeyChecking=no ${USER_NAME}@${HOSTNAME} '
           echo "Hello Git Actions"'
