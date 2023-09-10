@@ -3,8 +3,6 @@ name: Publish Project Production In AWS
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 jobs:
 
@@ -23,21 +21,41 @@ jobs:
            echo "Value of Variable XYZ: $XYZ"      
 
       - name: Build Docker image
+        env:
+           DOCKER_CLI_AGGREGATE: 1  
+        run: |          
+          docker-compose -f docker-compose.prod.yml build          
+      
+      - name: Push Docker image to Docker Hub
+        env:
+           DOCKER_LOGIN: ${{ secrets.DOCKER_LOGIN }}
+           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+           DOCKER_CLI_AGGREGATE: 1  
         run: |
-          docker-compose -f docker-compose.prod.yml build
+            docker login -u ${{ secrets.DOCKER_LOGIN }} -p ${{ secrets.DOCKER_PASSWORD }}    
+            docker push alexfariakof/infnet-devops-project
 
+      - name: Execute SSH Commands into EC2 
+        env:
+           EC2_HOST: ${{ secrets.EC2_HOST }}
+           EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
+           AWS_SSH_KEY: ${{ secrets.AWS_SSH_KEY }}
+           DOCKER_LOGIN: ${{ secrets.DOCKER_LOGIN }}
+           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       - name: Execute SSH Commands into EC2 
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.AWS_SSH_KEY }}
-          passphrase: ${{ secrets.AWS_SSH_KEY }}
           port: 22
           script: |            
             IMAGEM="alexfariakof/infnet-devops-project"
             container_id=$(docker ps -a -q --filter "ancestor=$IMAGEM")
             image_id=$(docker images --format "{{.ID}}" "$IMAGEM")
-            echo $container_id
+            docker login -u ${{ secrets.DOCKER_LOGIN }} -p ${{ secrets.DOCKER_PASSWORD }}    
             docker rm --force $container_id
+            docker rmi --force $image_id
+            docker pull $IMAGEM            
+            docker run -d -p 42537:42537 $IMAGEM
             docker run -d -p 42537:42537 $IMAGEM

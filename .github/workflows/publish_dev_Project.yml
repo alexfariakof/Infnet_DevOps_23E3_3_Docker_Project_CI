@@ -3,8 +3,6 @@ name: Publish Project Development In AWS
 on:
   push:
     branches: [ "pre-release" ]
-  pull_request:
-    branches: [ "pre-release" ]
 
 jobs:
 
@@ -13,17 +11,50 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Build Docker image and Publish
-      run: |
-        docker-compose -f docker-compose.dev.yml build        
-        mkdir -p ~/.ssh
-        echo "${{ secrets.AWS_SSH_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts        
-        IMAGEM="alexfariakof/infnet-devops-project-dev"
-        container_id=$(docker ps -a -q --filter "ancestor=$IMAGEM")
-        image_id=$(docker images --format "{{.ID}}" "$IMAGEM")
-        docker rm --force $container_id
-        docker run -d -p 42536:42536 $IMAGEM        
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Debug Information
+        run: |
+           echo "Current Directory: $(pwd)"
+           echo "Contents of Directory: $(ls)"
+           echo "Value of Variable XYZ: $XYZ"      
+
+      - name: Build Docker image
+        env:
+           DOCKER_CLI_AGGREGATE: 1  
+        run: |          
+          docker-compose -f docker-compose.dev.yml build          
+      
+      - name: Push Docker image to Docker Hub
+        env:
+           DOCKER_LOGIN: ${{ secrets.DOCKER_LOGIN }}
+           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+           DOCKER_CLI_AGGREGATE: 1  
+        run: |
+            docker login -u ${{ secrets.DOCKER_LOGIN }} -p ${{ secrets.DOCKER_PASSWORD }}    
+            docker push alexfariakof/infnet-devops-project-dev
+
+      - name: Execute SSH Commands into EC2 
+        env:
+           EC2_HOST: ${{ secrets.EC2_HOST }}
+           EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
+           AWS_SSH_KEY: ${{ secrets.AWS_SSH_KEY }}
+           DOCKER_LOGIN: ${{ secrets.DOCKER_LOGIN }}
+           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.AWS_SSH_KEY }}
+          port: 22
+          script: |            
+            IMAGEM="alexfariakof/infnet-devops-project-dev"
+            container_id=$(docker ps -a -q --filter "ancestor=$IMAGEM")
+            image_id=$(docker images --format "{{.ID}}" "$IMAGEM")
+            docker login -u ${{ secrets.DOCKER_LOGIN }} -p ${{ secrets.DOCKER_PASSWORD }}    
+            docker rm --force $container_id
+            docker rmi --force $image_id
+            docker pull $IMAGEM            
+            docker run -d -p 42536:42536 $IMAGEM
