@@ -57,4 +57,4 @@ jobs:
             docker rm --force $container_id
             docker rmi --force $image_id
             docker pull $IMAGEM            
-            docker run -d -p 42537:42537 $IMAGEM
+            docker run -d -p 42536:42536 $IMAGEM
