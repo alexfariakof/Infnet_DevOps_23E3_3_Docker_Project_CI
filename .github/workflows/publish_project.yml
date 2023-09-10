@@ -42,7 +42,7 @@ jobs:
            AWS_SSH_KEY: ${{ secrets.AWS_SSH_KEY }}
            DOCKER_LOGIN: ${{ secrets.DOCKER_LOGIN }}
            DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Execute SSH Commands into EC2 
+
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
@@ -57,5 +57,4 @@ jobs:
             docker rm --force $container_id
             docker rmi --force $image_id
             docker pull $IMAGEM            
-            docker run -d -p 42537:42537 $IMAGEM
             docker run -d -p 42537:42537 $IMAGEM
