@@ -3,7 +3,7 @@
   <PropertyGroup Label="Globals">
     <ProjectVersion>2.1</ProjectVersion>
     <DockerTargetOS>Linux</DockerTargetOS>
-    <ProjectGuid>7c24b644-6d43-47b7-ab32-39e5f109dd30</ProjectGuid>
+    <ProjectGuid>8FF83149-0750-4D6E-9D43-66322F6BA072</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/swagger</DockerServiceUrl>
     <DockerServiceName>infnet-devops-23e3-3-docker-project</DockerServiceName>

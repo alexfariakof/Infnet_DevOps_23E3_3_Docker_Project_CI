@@ -1,4 +1,4 @@
-name: Sonar_Cloud_Test
+name: Test Code In Sonar Cloud
 on:
   push:
     branches: 

@@ -1,10 +1,10 @@
-name: Publish Project Production In AWS
+name: Publish Project Development In AWS
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "pre-release" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "pre-release" ]
 
 jobs:
 
@@ -26,7 +26,7 @@ jobs:
         env:
            DOCKER_CLI_AGGREGATE: 1  
         run: |          
-          docker-compose -f docker-compose.prod.yml build          
+          docker-compose -f docker-compose.dev.yml build          
       
       - name: Push Docker image to Docker Hub
         env:
@@ -35,7 +35,7 @@ jobs:
            DOCKER_CLI_AGGREGATE: 1  
         run: |
             docker login -u ${{ secrets.DOCKER_LOGIN }} -p ${{ secrets.DOCKER_PASSWORD }}    
-            docker push alexfariakof/infnet-devops-project
+            docker push alexfariakof/infnet-devops-project-dev
 
       - name: Execute SSH Commands into EC2 
         env:
@@ -52,7 +52,7 @@ jobs:
           key: ${{ secrets.AWS_SSH_KEY }}
           port: 22
           script: |            
-            IMAGEM="alexfariakof/infnet-devops-project"
+            IMAGEM="alexfariakof/infnet-devops-project-dev"
             container_id=$(docker ps -a -q --filter "ancestor=$IMAGEM")
             image_id=$(docker images --format "{{.ID}}" "$IMAGEM")
             docker login -u ${{ secrets.DOCKER_LOGIN }} -p ${{ secrets.DOCKER_PASSWORD }}    
