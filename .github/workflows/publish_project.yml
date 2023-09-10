@@ -1,5 +1,4 @@
 name: Publish Project Production In AWS
-
 on:
   push:
     branches: [ "main" ]
