@@ -47,9 +47,8 @@ app.UseRouting()
        config.MapHealthChecksUI();
    });
 
-app.Run();
+//app.Run();
 
-/*
 if (app.Environment.IsDevelopment())
 {
     app.Run("http://0.0.0.0:42536");
@@ -58,4 +57,3 @@ else
 {
     app.Run("http://0.0.0.0:42537");
 }
-*/
