@@ -16,15 +16,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      #- name: Debug Information
-        #run: |
-           #echo "Current Directory: $(pwd)"
-           #echo "Contents of Directory: $(ls)"
-           #echo "Value of Variable XYZ: $XYZ"      
+      - name: Debug Information
+        run: |
+           echo "Current Directory: $(pwd)"
+           echo "Contents of Directory: $(ls)"
+           echo "Value of Variable XYZ: $XYZ"      
 
-      #- name: Build Docker image
-        #run: |
-          #docker-compose -f docker-compose.prod.yml build
+      - name: Build Docker image and Push to Docker Hub
+        env:
+           DOCKER_LOGIN: ${{ secrets.DOCKER_LOGIN }}
+           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+           DOCKER_CLI_AGGREGATE: 1
+        run: |
+          docker login -u ${{ secrets.DOCKER_LOGIN }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker-compose -f docker-compose.prod.yml build
+          docker push alexfariakof/infnet-devops-project
 
       - name: Execute SSH Commands into EC2 
         env:
@@ -38,10 +44,9 @@ jobs:
           key: ${{ secrets.AWS_SSH_KEY }}
           port: 22
           script: |            
-            echo "Hello GitActions"
-            #IMAGEM="alexfariakof/infnet-devops-project"
-            #container_id=$(docker ps -a -q --filter "ancestor=$IMAGEM")
-            #image_id=$(docker images --format "{{.ID}}" "$IMAGEM")
-            #echo $container_id
-            #docker rm --force $container_id
-            #docker run -d -p 42537:42537 $IMAGEM
+            IMAGEM="alexfariakof/infnet-devops-project"
+            container_id=$(docker ps -a -q --filter "ancestor=$IMAGEM")
+            image_id=$(docker images --format "{{.ID}}" "$IMAGEM")
+            echo $container_id
+            docker rm --force $container_id
+            docker run -d -p 42537:42537 $IMAGEM
