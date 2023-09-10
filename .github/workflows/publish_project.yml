@@ -22,21 +22,29 @@ jobs:
            echo "Contents of Directory: $(ls)"
            echo "Value of Variable XYZ: $XYZ"      
 
-      - name: Build Docker image and Push to Docker Hub
+      - name: Build Docker image
+        env:
+           DOCKER_CLI_AGGREGATE: 1  
+        run: |          
+          docker-compose -f docker-compose.prod.yml build          
+      
+      - name: Push Docker image to Docker Hub
         env:
            DOCKER_LOGIN: ${{ secrets.DOCKER_LOGIN }}
            DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-           DOCKER_CLI_AGGREGATE: 1
+           DOCKER_CLI_AGGREGATE: 1  
         run: |
-          docker login -u ${{ secrets.DOCKER_LOGIN }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker-compose -f docker-compose.prod.yml build
-          docker push alexfariakof/infnet-devops-project
+            docker login -u ${{ secrets.DOCKER_LOGIN }} -p ${{ secrets.DOCKER_PASSWORD }}    
+            docker push alexfariakof/infnet-devops-project
 
       - name: Execute SSH Commands into EC2 
         env:
            EC2_HOST: ${{ secrets.EC2_HOST }}
            EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
            AWS_SSH_KEY: ${{ secrets.AWS_SSH_KEY }}
+           DOCKER_LOGIN: ${{ secrets.DOCKER_LOGIN }}
+           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
@@ -47,6 +55,8 @@ jobs:
             IMAGEM="alexfariakof/infnet-devops-project"
             container_id=$(docker ps -a -q --filter "ancestor=$IMAGEM")
             image_id=$(docker images --format "{{.ID}}" "$IMAGEM")
-            echo $container_id
+            docker login -u ${{ secrets.DOCKER_LOGIN }} -p ${{ secrets.DOCKER_PASSWORD }}    
             docker rm --force $container_id
+            docker rmi --force $image_id
+            docker pull $IMAGEM            
             docker run -d -p 42537:42537 $IMAGEM
