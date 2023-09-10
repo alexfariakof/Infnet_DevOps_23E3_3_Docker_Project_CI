@@ -23,11 +23,23 @@ namespace Infnet_DevOps_23E3_3_Docker_Project.Controllers
         {
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
-                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
+                Date = DateTime.Now.AddDays(index),
                 TemperatureC = Random.Shared.Next(-20, 55),
                 Summary = Summaries[Random.Shared.Next(Summaries.Length)]
             })
             .ToArray();
+        }
+        [HttpPost(Name = "PostWeatherForecast")]
+        public WeatherForecast Post()
+        {
+            var count = 0;
+
+            return new WeatherForecast
+            {
+                Date = DateTime.Now,
+                TemperatureC = Random.Shared.Next(-20, 55) / count,
+                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+            };
         }
     }
 }

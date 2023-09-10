@@ -1,0 +1,12 @@
+Monitaramento de API não Autenticadas ne Autenticadas com HealthChecks
+
+https://github.com/Xabaril/AspNetCore.Diagnostics.HealthChecks
+
+EndPoint Healthchecks
+	/healthchecks-ui
+
+https://github.com/rafaelcruz-net/infnet-2023E2-DevOps/tree/feature/config-health-check
+
+https://localhost:32799/healthz
+
+
