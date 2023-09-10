@@ -23,28 +23,40 @@ jobs:
            echo "Value of Variable XYZ: $XYZ"      
 
       - name: Build Docker image
+        env:
+           DOCKER_CLI_AGGREGATE: 1  
+        run: |          
+          docker-compose -f docker-compose.prod.yml build          
+      
+      - name: Push Docker image to Docker Hub
+        env:
+           DOCKER_LOGIN: ${{ secrets.DOCKER_LOGIN }}
+           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+           DOCKER_CLI_AGGREGATE: 1  
         run: |
-          docker-compose -f docker-compose.prod.yml build
+            docker login -u ${{ secrets.DOCKER_LOGIN }} -p ${{ secrets.DOCKER_PASSWORD }}    
+            docker push alexfariakof/infnet-devops-project
 
-      - name: Configure SSH and Copy Private Key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.AWS_SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
-          echo "StrictHostKeyChecking no" >> ~/.ssh/config
+      - name: Execute SSH Commands into EC2 
+        env:
+           EC2_HOST: ${{ secrets.EC2_HOST }}
+           EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
+           AWS_SSH_KEY: ${{ secrets.AWS_SSH_KEY }}
+           DOCKER_LOGIN: ${{ secrets.DOCKER_LOGIN }}
+           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
-      #- name: Execute SSH Commands into EC2 
-        #uses: appleboy/ssh-action@master
-        #with:
-          #host: ${{ secrets.EC2_HOST }}
-          #username: ec2-user
-          #key: ${{ secrets.AWS_SSH_KEY }}
-          #port: 22
-          #script: |            
-            #IMAGEM="alexfariakof/infnet-devops-project"
-            #container_id=$(docker ps -a -q --filter "ancestor=$IMAGEM")
-            #image_id=$(docker images --format "{{.ID}}" "$IMAGEM")
-            #echo $container_id
-            #docker rm --force $container_id
-            #docker run -d -p 42537:42537 $IMAGEM
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.AWS_SSH_KEY }}
+          port: 22
+          script: |            
+            IMAGEM="alexfariakof/infnet-devops-project"
+            container_id=$(docker ps -a -q --filter "ancestor=$IMAGEM")
+            image_id=$(docker images --format "{{.ID}}" "$IMAGEM")
+            docker login -u ${{ secrets.DOCKER_LOGIN }} -p ${{ secrets.DOCKER_PASSWORD }}    
+            docker rm --force $container_id
+            docker rmi --force $image_id
+            docker pull $IMAGEM            
+            docker run -d -p 42537:42537 $IMAGEM
