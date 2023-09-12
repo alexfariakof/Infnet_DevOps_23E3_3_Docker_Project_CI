@@ -33,7 +33,7 @@ jobs:
            DOCKER_CLI_AGGREGATE: 1  
         run: |
             docker login -u ${{ secrets.DOCKER_LOGIN }} -p ${{ secrets.DOCKER_PASSWORD }}    
-            docker push alexfariakof/infnet-devops-project-dev
+            docker push ${{ secrets.DOCKER_IMAGE_DEV }}
 
       - name: Execute SSH Commands into EC2 
         env:
@@ -50,7 +50,7 @@ jobs:
           key: ${{ secrets.AWS_SSH_KEY }}
           port: 22
           script: |            
-            IMAGEM="alexfariakof/infnet-devops-project-dev"
+            IMAGEM="${{ secrets.DOCKER_IMAGE_DEV }}"
             container_id=$(docker ps -a -q --filter "ancestor=$IMAGEM")
             image_id=$(docker images --format "{{.ID}}" "$IMAGEM")
             docker login -u ${{ secrets.DOCKER_LOGIN }} -p ${{ secrets.DOCKER_PASSWORD }}    
