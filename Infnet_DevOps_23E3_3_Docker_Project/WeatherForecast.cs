@@ -2,7 +2,7 @@ namespace Infnet_DevOps_23E3_3_Docker_Project
 {
     public class WeatherForecast
     {
-        public DateOnly Date { get; set; }
+        public DateTime Date { get; set; }
 
         public int TemperatureC { get; set; }
 
