@@ -2,6 +2,7 @@ name: Test Code In Sonar Cloud
 on:
   push:
     branches: 
+      - main
       - feature/*
 jobs:
   build:
