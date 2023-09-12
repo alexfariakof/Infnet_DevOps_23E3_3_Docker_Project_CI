@@ -11,12 +11,15 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
+        
     - name: Restore dependencies
-      run: dotnet restore despesas-backend-api-net-core.csproj
+      run: dotnet restore Infnet_DevOps_23E3_3_Docker_Project/Infnet_DevOps_23E3_3_Docker_Project.csproj
+    
     - name: Build
-      run: dotnet build despesas-backend-api-net-core.csproj --no-restore
-    #- name: Test
-      #run: dotnet test --no-build --verbosity normal
+      run: dotnet build Infnet_DevOps_23E3_3_Docker_Project/Infnet_DevOps_23E3_3_Docker_Project.csproj --no-restore
+    
+    - name: Test
+      run: dotnet test Infnet_DevOps_23E3_3_Docker_Project/Infnet_DevOps_23E3_3_Docker_Project.csproj --no-build --verbosity normal
     continue-on-error: false
     
   job_test_code_in_sonar:
@@ -72,7 +75,7 @@ jobs:
         env:
            DOCKER_CLI_AGGREGATE: 1  
         run: |          
-          docker-compose build          
+          docker-compose -f docker-compose.prod.yml build          
       
       - name: Push Docker image to Docker Hub
         env:
@@ -81,7 +84,7 @@ jobs:
            DOCKER_CLI_AGGREGATE: 1  
         run: |
             docker login -u ${{ secrets.DOCKER_LOGIN }} -p ${{ secrets.DOCKER_PASSWORD }}    
-            docker push ${{ secrets.DOCKER_IMAGE }}
+            docker push ${{ secrets.DOCKER_IMAGE_PROD }}
 
       - name: Execute SSH Commands into EC2 
         env:
@@ -98,14 +101,14 @@ jobs:
           key: ${{ secrets.AWS_SSH_KEY }}
           port: 22
           script: |            
-            IMAGEM="${{ secrets.DOCKER_IMAGE }}"
+            IMAGEM="${{ secrets.DOCKER_IMAGE_PROD }}"
             container_id=$(docker ps -a -q --filter "ancestor=$IMAGEM")
             image_id=$(docker images --format "{{.ID}}" "$IMAGEM")
             docker login -u ${{ secrets.DOCKER_LOGIN }} -p ${{ secrets.DOCKER_PASSWORD }}    
             docker rm --force $container_id
             docker rmi --force $image_id
             docker pull $IMAGEM            
-            docker run -d -p 42535:42535 $IMAGEM
+            docker run -d -p 42537:42537 $IMAGEM
             container_id=$(docker ps -q --filter "ancestor=$IMAGEM")
             docker cp ${{ secrets.PATH_APPSETTINGS_PROD }} $container_id:/app
             docker restart $container_id
