@@ -39,25 +39,8 @@ jobs:
             docker login -u ${{ secrets.DOCKER_LOGIN }} -p ${{ secrets.DOCKER_PASSWORD }}    
             docker rm --force $container_id
             docker rmi --force $image_id
-            docker pull $IMAGEM        
-            docker run -d -p 42537:42537 $IMAGEM
-      
-      - name: Criando Arquivo appsettings dentro do container 
-        env:
-           EC2_HOST: ${{ secrets.EC2_HOST }}
-           EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
-           AWS_SSH_KEY: ${{ secrets.AWS_SSH_KEY }}
-           DOCKER_LOGIN: ${{ secrets.DOCKER_LOGIN }}
-           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.AWS_SSH_KEY }}
-          port: 22
-          script: |            
-            IMAGEM="${{ secrets.DOCKER_IMAGE_PROD }}"
+            docker pull $IMAGEM && docker run -d -p 42537:42537 $IMAGEM
             container_id=$(docker ps -a -q --filter "ancestor=$IMAGEM")
             docker exec -it $container_id echo ${{ secrets.APP_SETTINGS_PROD }} > /app/appsettings.json
             docker restart $container_id
+      
