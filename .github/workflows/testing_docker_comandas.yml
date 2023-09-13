@@ -44,5 +44,5 @@ jobs:
             container_id=$(docker ps -a -q --filter "ancestor=$IMAGEM");
             docker exec $container_id bash -c 'pwd'; 
             docker exec $container_id bash -c 'ls a*'; 
-            docker exec $container_id bash -c "cat << EOF > appsettings.json ${{ secrets.APP_SETTINGS_PROD }} EOF"
+            docker exec $container_id bash -c "cat <<EOF > /app/appsettings.json ${{ secrets.APP_SETTINGS_PROD }} EOF";
             docker restart $container_id;
