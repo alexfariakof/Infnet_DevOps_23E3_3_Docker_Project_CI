@@ -1,12 +1,48 @@
-name: Test Code In Sonar Cloud
+name: Build Test and Analyze Code In Sonar Cloud
 on:
   push:
     branches: 
-      - main
-      - feature/*
+        - hotfix/*        
+        - feature/*  
+        - bug-fix/*
+
+  pull_request:
+      types: [opened, synchronize, reopened]
+      branches:
+        - develop
+        - hotfix/*
+        - feature/*  
+        - bug-fix/*       
+
+permissions:
+  contents: read    
+
 jobs:
-  build:
-    name: Build and analyze
+  build_and_test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+ 
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore Infnet_DevOps_23E3_3_Docker_Project/Infnet_DevOps_23E3_3_Docker_Project.csproj
+      continue-on-error: false
+
+    - name: Build
+      run: dotnet build Infnet_DevOps_23E3_3_Docker_Project/Infnet_DevOps_23E3_3_Docker_Project.csproj --no-restore
+      continue-on-error: false
+
+    - name: Test
+      run: dotnet test Infnet_DevOps_23E3_3_Docker_Project/Infnet_DevOps_23E3_3_Docker_Project.csproj --no-build --verbosity normal
+      continue-on-error: false
+
+  build_sonarcloud:
+    needs: build_and_test
+    name: Build Test and Analyze Code in Sonar Cloud
     runs-on: windows-latest
     steps:
       - name: Set up JDK 17

@@ -1,30 +1,39 @@
-name: Build, Test and Publish Project Production In AWS
+name: Build Test Deploy and Publish Production Project In AWS
 on:
   push:
     branches: [ "main" ]
+
+  pull_request:
+      types: [opened, synchronize, reopened]
+      branches:
+        - main
+
 jobs:
-  job_build_and_test_unit:   
+  build_and_test:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+ 
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
-        
+
     - name: Restore dependencies
       run: dotnet restore Infnet_DevOps_23E3_3_Docker_Project/Infnet_DevOps_23E3_3_Docker_Project.csproj
-    
+      continue-on-error: false
+
     - name: Build
       run: dotnet build Infnet_DevOps_23E3_3_Docker_Project/Infnet_DevOps_23E3_3_Docker_Project.csproj --no-restore
-    
+      continue-on-error: false
+
     - name: Test
       run: dotnet test Infnet_DevOps_23E3_3_Docker_Project/Infnet_DevOps_23E3_3_Docker_Project.csproj --no-build --verbosity normal
-    continue-on-error: false
-    
-  job_test_code_in_sonar:
-    needs: job_build_and_test_unit
-    name: Build and analyze
+      continue-on-error: false
+
+  build_sonarcloud:
+    needs: build_and_test
+    name: Build Test and Analyze Code in Sonar Cloud
     runs-on: windows-latest
     steps:
       - name: Set up JDK 17
@@ -60,13 +69,14 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"alexfariakof_despesas-backend-api-net-core" /o:"alexfariakof" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml"
-          dotnet test --collect:"XPlat Code Coverage;Format=opencover"    
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"alexfariakof_Infnet_DevOps_23E3_3_Docker_Project_CI" /o:"alexfariakof" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml"
+          dotnet test --collect:"XPlat Code Coverage;Format=opencover"
+          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
         continue-on-error: false
-        
-  deploy:
-    needs: job_test_code_in_sonar
-    name: Docker Build and Publish in Production
+
+  deploy_dev:
+    needs: build_sonarcloud
+    name: Dev Build Deploy and Publish Docker Image
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -76,7 +86,8 @@ jobs:
            DOCKER_CLI_AGGREGATE: 1  
         run: |          
           docker-compose -f docker-compose.prod.yml build          
-      
+        continue-on-error: false
+
       - name: Push Docker image to Docker Hub
         env:
            DOCKER_LOGIN: ${{ secrets.DOCKER_LOGIN }}
@@ -85,6 +96,7 @@ jobs:
         run: |
             docker login -u ${{ secrets.DOCKER_LOGIN }} -p ${{ secrets.DOCKER_PASSWORD }}    
             docker push ${{ secrets.DOCKER_IMAGE_PROD }}
+        continue-on-error: false
 
       - name: Execute SSH Commands into EC2 
         env:
@@ -110,5 +122,5 @@ jobs:
             docker pull $IMAGEM            
             docker run -d -p 42537:42537 $IMAGEM
             container_id=$(docker ps -q --filter "ancestor=$IMAGEM")
-            docker cp ${{ secrets.PATH_APPSETTINGS_PROD }} $container_id:/app
+            docker exec -it $container_id sh -c 'echo "${{ secrets.APP_SETTINGS_PROD }}" > appsettings.json'
             docker restart $container_id

@@ -1,14 +1,18 @@
-name: .NET Build and Test Code
-
+name: .NET Build and Test
 on:
-  push:
-    branches: [ "feature/*" ]
+  pull_request:
+      types: [opened, synchronize, reopened]
+      branches:
+        - hotfix/*
+        - feature/*  
+        - bug-fix/*       
+
+permissions:
+  contents: read    
 
 jobs:
-  build:
-
+  build_and_test:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v3
     - name: Setup .NET
