@@ -10,26 +10,21 @@ builder.Services.AddSwaggerGen();
 
 //Add HelthChecks
 builder.Services.AddHealthChecks()
-                .AddSqlServer(
-                    connectionString: builder.Configuration.GetConnectionString("InfnetPosDb"),
-                    healthQuery: "SELECT 1",
-                    name: "Database",
+                .AddMySql(
+                    connectionString: builder.Configuration.GetConnectionString("MySqlConnectionString"),
+                    healthQuery: "SELECT 1;",
+                    name: "MySql Server AWS RDS ",
                     failureStatus: Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Unhealthy
                 )
+                .AddUrlGroup(new Uri("http://alexfariakof.com:42536/swagger"), "Api Health Checks DEV")
+                .AddUrlGroup(new Uri("http://alexfariakof.com:42537/swagger"), "Api Health Checks PROD")
                 .AddUrlGroup(new Uri("http://httpbin.org/status/200"), "Api Terceiro Nao Autenticada")
                 .AddCheck<HealthCheckRandom>(name: "Api Terceiro Autenticada");
 
-
 builder.Services.AddHealthChecksUI(s =>
 {
-    s.AddHealthCheckEndpoint("Infnet API HealthChecks DEV", "http://alexfariakof.com:42536/healthz");
+    s.AddHealthCheckEndpoint("Infnet API HealthChecks", builder.Configuration.GetSection("HealthChecks:URI").Value);
 }).AddInMemoryStorage();
-
-builder.Services.AddHealthChecksUI(s =>
-{
-    s.AddHealthCheckEndpoint("Infnet API HealthChecks PROD", "http://alexfariakof.com:42537/healthz");
-}).AddInMemoryStorage();
-
 
 var app = builder.Build();
 app.UseSwagger();

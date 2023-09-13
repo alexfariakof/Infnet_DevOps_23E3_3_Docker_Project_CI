@@ -2,12 +2,12 @@ name: Build Test Deploy and Publish Dev Project In AWS
 
 on:
   push:
-    branches: [ "release" ]
+    branches: [ "develop" ]
 
   pull_request:
       types: [opened, synchronize, reopened]
       branches:
-        - release
+        - develop
 
 jobs:
 
@@ -131,5 +131,5 @@ jobs:
             docker pull $IMAGEM            
             docker run -d -p 42536:42536 $IMAGEM
             container_id=$(docker ps -q --filter "ancestor=$IMAGEM")
-            docker exec -it $container_id bash -c  echo "${{ secrets.APP_SETTINGS_DEV }}" > /app/appsettings.json'
+            docker cp appsettings.healthchecks.dev.json $container_id:/app/appsettings.json            
             docker restart $container_id

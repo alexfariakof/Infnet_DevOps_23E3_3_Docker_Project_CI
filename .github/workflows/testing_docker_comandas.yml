@@ -1,0 +1,48 @@
+name: Test Docker Command to Create appssteings.json
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy_dev:
+    name: Dev Build Deploy and Publish Docker Image
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Login into Docker Hub
+        env:
+           DOCKER_LOGIN: ${{ secrets.DOCKER_LOGIN }}
+           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+           DOCKER_CLI_AGGREGATE: 1  
+        run: |
+            docker login -u ${{ secrets.DOCKER_LOGIN }} -p ${{ secrets.DOCKER_PASSWORD }}    
+        continue-on-error: false
+
+      - name: Execute SSH Commands into EC2 
+        env:
+           EC2_HOST: ${{ secrets.EC2_HOST }}
+           EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
+           AWS_SSH_KEY: ${{ secrets.AWS_SSH_KEY }}
+           DOCKER_LOGIN: ${{ secrets.DOCKER_LOGIN }}
+           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.AWS_SSH_KEY }}
+          port: 22
+          script: |            
+            IMAGEM="${{ secrets.DOCKER_IMAGE_PROD }}";
+            container_id=$(docker ps -a -q --filter "ancestor=$IMAGEM");
+            image_id=$(docker images --format "{{.ID}}" "$IMAGEM");
+            docker login -u ${{ secrets.DOCKER_LOGIN }} -p ${{ secrets.DOCKER_PASSWORD }};
+            docker rm --force $container_id;
+            docker rmi --force $image_id;
+            docker pull $IMAGEM;
+            docker run -d -p 42537:42537 $IMAGEM;
+            container_id=$(docker ps -a -q --filter "ancestor=$IMAGEM");
+            docker exec $container_id bash -c 'pwd'; 
+            docker exec $container_id bash -c 'ls a*'; 
+            docker exec $container_id bash -c "cat <<EOF > /app/appsettings.json ${{ secrets.APP_SETTINGS_PROD }} EOF";
+            docker restart $container_id;
