@@ -21,7 +21,6 @@ builder.Services.AddHealthChecks()
                 .AddUrlGroup(new Uri("http://httpbin.org/status/200"), "Api Terceiro Nao Autenticada")
                 .AddCheck<HealthCheckRandom>(name: "Api Terceiro Autenticada");
 
-
 builder.Services.AddHealthChecksUI(s =>
 {
     s.AddHealthCheckEndpoint("Infnet API HealthChecks", builder.Configuration.GetSection("HealthChecks:URI").Value);
