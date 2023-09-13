@@ -48,8 +48,8 @@ jobs:
             docker login -u ${{ secrets.DOCKER_LOGIN }} -p ${{ secrets.DOCKER_PASSWORD }}    
             docker rm --force $container_id
             docker rmi --force $image_id
-            docker pull $IMAGEM            
-            docker run -d -p 42537:42537 $IMAGEM
+            docker pull $IMAGEM &&         
+            docker run -d -p 42537:42537 $IMAGEM &&
             container_id=$(docker ps -a -q --filter "ancestor=$IMAGEM")
             docker exec -it $container_id bash -c 'rm app/appsettings.json'
             docker exec -it $container_id bash -c  'echo ${{ secrets.APP_SETTINGS_PROD }} > /app/appsettings.json'
