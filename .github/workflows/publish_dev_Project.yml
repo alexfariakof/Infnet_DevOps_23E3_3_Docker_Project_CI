@@ -3,12 +3,6 @@ name: Build Test Deploy and Publish Dev Project In AWS
 on:
   push:
     branches: [ "develop" ]
-
-  pull_request:
-      types: [opened, synchronize, reopened]
-      branches:
-        - develop
-
 jobs:
 
   build_and_test:

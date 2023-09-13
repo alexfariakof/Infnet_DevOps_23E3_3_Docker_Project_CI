@@ -2,12 +2,6 @@ name: Build Test Deploy and Publish Production Project In AWS
 on:
   push:
     branches: [ "main" ]
-
-  pull_request:
-      types: [opened, synchronize, reopened]
-      branches:
-        - main
-
 jobs:
   build_and_test:
     runs-on: ubuntu-latest
