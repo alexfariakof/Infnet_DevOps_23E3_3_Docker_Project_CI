@@ -59,5 +59,5 @@ jobs:
           script: |            
             IMAGEM="${{ secrets.DOCKER_IMAGE_PROD }}"
             container_id=$(docker ps -a -q --filter "ancestor=$IMAGEM")
-            docker exec $container_id sh -c 'echo ${{ secrets.APP_SETTINGS_PROD }} > /app/appsettings.json'
+            docker exec -it $container_id echo ${{ secrets.APP_SETTINGS_PROD }} > /app/appsettings.json
             docker restart $container_id
