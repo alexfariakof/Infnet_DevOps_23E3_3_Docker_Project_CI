@@ -68,9 +68,9 @@ jobs:
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
         continue-on-error: false
 
-  deploy_dev:
+  deploy_prod:
     needs: build_sonarcloud
-    name: Dev Build Deploy and Publish Docker Image
+    name: Production Build Deploy and Publish Docker Image
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
