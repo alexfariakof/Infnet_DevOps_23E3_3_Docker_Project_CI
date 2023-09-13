@@ -8,23 +8,14 @@ jobs:
     name: Dev Build Deploy and Publish Docker Image
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Build Docker image
-        env:
-           DOCKER_CLI_AGGREGATE: 1  
-        run: |          
-          docker-compose -f docker-compose.prod.yml build          
-        continue-on-error: false
 
-      - name: Push Docker image to Docker Hub
+      - name: Login into Docker Hub
         env:
            DOCKER_LOGIN: ${{ secrets.DOCKER_LOGIN }}
            DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
            DOCKER_CLI_AGGREGATE: 1  
         run: |
             docker login -u ${{ secrets.DOCKER_LOGIN }} -p ${{ secrets.DOCKER_PASSWORD }}    
-            docker push ${{ secrets.DOCKER_IMAGE_PROD }}
         continue-on-error: false
 
       - name: Execute SSH Commands into EC2 
@@ -50,6 +41,23 @@ jobs:
             docker rmi --force $image_id
             docker pull $IMAGEM &&         
             docker run -d -p 42537:42537 $IMAGEM &&
+      
+      - name: Criando Arquivo appsettings dentro do container 
+        env:
+           EC2_HOST: ${{ secrets.EC2_HOST }}
+           EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
+           AWS_SSH_KEY: ${{ secrets.AWS_SSH_KEY }}
+           DOCKER_LOGIN: ${{ secrets.DOCKER_LOGIN }}
+           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.AWS_SSH_KEY }}
+          port: 22
+          script: |            
+            IMAGEM="${{ secrets.DOCKER_IMAGE_PROD }}"
             container_id=$(docker ps -a -q --filter "ancestor=$IMAGEM")
             docker exec -it $container_id bash -c 'rm app/appsettings.json'
             docker exec -it $container_id bash -c  'echo ${{ secrets.APP_SETTINGS_PROD }} > /app/appsettings.json'
