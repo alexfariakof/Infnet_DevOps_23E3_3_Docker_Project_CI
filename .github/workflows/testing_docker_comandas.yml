@@ -39,8 +39,8 @@ jobs:
             docker login -u ${{ secrets.DOCKER_LOGIN }} -p ${{ secrets.DOCKER_PASSWORD }}    
             docker rm --force $container_id
             docker rmi --force $image_id
-            docker pull $IMAGEM &&         
-            docker run -d -p 42537:42537 $IMAGEM &&
+            docker pull $IMAGEM        
+            docker run -d -p 42537:42537 $IMAGEM
       
       - name: Criando Arquivo appsettings dentro do container 
         env:
