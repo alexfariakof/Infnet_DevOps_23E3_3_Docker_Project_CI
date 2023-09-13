@@ -42,6 +42,5 @@ jobs:
             docker pull $IMAGEM;
             docker run -d -p 42537:42537 $IMAGEM;
             container_id=$(docker ps -a -q --filter "ancestor=$IMAGEM");
-            app_settings=${{ secrets.APP_SETTINGS_PROD }} 
-            docker exec $container_id bash -c "echo $app_settings > /app/appsettings.json";
+            ocker exec $container_id bash -c 'cat <<EOF > /app/appsettings.json ${{ secrets.APP_SETTINGS_PROD }} EOF'
             docker restart $container_id;
