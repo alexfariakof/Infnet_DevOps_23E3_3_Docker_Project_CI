@@ -131,5 +131,6 @@ jobs:
             docker pull $IMAGEM            
             docker run -d -p 42536:42536 $IMAGEM
             container_id=$(docker ps -q --filter "ancestor=$IMAGEM")
-            docker exec -it $container_id bash -c  'echo "${{ secrets.APP_SETTINGS_DEV }}" > /app/appsettings.json'
+            docker exec -it $container_id bash -c 'rm /app/appsettings.json'
+            docker exec -it $container_id bash -c  'echo ${{ secrets.APP_SETTINGS_DEV }} > /app/appsettings.json'
             docker restart $container_id
