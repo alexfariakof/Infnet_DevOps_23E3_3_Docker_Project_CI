@@ -32,21 +32,8 @@ namespace Infnet_DevOps_23E3_3_Docker_Project.Controllers
         [HttpPost(Name = "PostWeatherForecast")]
         public WeatherForecast Post()
         {
-            var count = 5;
+            var count = 0;
 
-            return new WeatherForecast
-            {
-                Date = DateTime.Now,
-                TemperatureC = Random.Shared.Next(-20, 55) / count,
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            };
-        }
-
-        [HttpPut(Name = "PutWeatherForecast")]
-        public WeatherForecast Put()
-        {
-            var count = 8;
-            int resultado = 10 / (count - 8);  
             return new WeatherForecast
             {
                 Date = DateTime.Now,

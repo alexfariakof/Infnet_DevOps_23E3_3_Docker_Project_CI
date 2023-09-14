@@ -4,11 +4,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infnet_DevOps_23E3_3_Docker_Project", "Infnet_DevOps_23E3_3_Docker_Project\Infnet_DevOps_23E3_3_Docker_Project.csproj", "{B00B9B93-17FB-42B6-A653-4D695C9A0A04}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8FF83149-0750-4D6E-9D43-66322F6BA072} = {8FF83149-0750-4D6E-9D43-66322F6BA072}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infnet_DevOps_23E3_3_Docker_Project_Test", "Infnet_DevOps_23E3_3_Docker_Project_Test\Infnet_DevOps_23E3_3_Docker_Project_Test.csproj", "{8FF83149-0750-4D6E-9D43-66322F6BA072}"
-	ProjectSection(ProjectDependencies) = postProject
-		{B00B9B93-17FB-42B6-A653-4D695C9A0A04} = {B00B9B93-17FB-42B6-A653-4D695C9A0A04}
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{B5D46E2A-1071-475D-AF84-FF4C748909D9}"
 	ProjectSection(SolutionItems) = preProject
