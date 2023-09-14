@@ -6,7 +6,14 @@ on:
         - hotfix/*        
         - feature/*  
         - bug-fix/*
-
+        
+  pull_request:
+      types: [synchronize, reopened]
+      branches:
+        - hotfix/*
+        - feature/*  
+        - bug-fix/*  
+        
 permissions:
   contents: read    
 
