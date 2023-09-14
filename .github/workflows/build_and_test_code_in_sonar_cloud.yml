@@ -5,11 +5,13 @@ on:
         - hotfix/*        
         - feature/*  
         - bug-fix/*
+        - release/*
         
   pull_request:
       types: [opened, synchronize, reopened]
       branches:
         - develop 
+        - release/*
         - pre-release
         - hotfix/*
         - feature/*  
