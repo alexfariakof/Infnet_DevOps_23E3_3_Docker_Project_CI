@@ -1,20 +1,19 @@
 name: Build Test and Analyze Code In Sonar Cloud
 on:
   push:
-    branches: 
-        - develop   
-        - pre-release
+    branches:           
         - hotfix/*        
         - feature/*  
         - bug-fix/*
         
   pull_request:
-      types: [synchronize, reopened]
+      types: [opened, synchronize, reopened]
       branches:
+        - develop 
         - pre-release
         - hotfix/*
         - feature/*  
-        - bug-fix/*  
+        - bug-fix/*          
         
 permissions:
   contents: read    
