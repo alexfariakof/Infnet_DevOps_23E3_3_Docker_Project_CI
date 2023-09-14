@@ -24,4 +24,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Infnet_DevOps_23E3_3_Docker_Project\Infnet_DevOps_23E3_3_Docker_Project.csproj" />
+  </ItemGroup>
+
 </Project>
