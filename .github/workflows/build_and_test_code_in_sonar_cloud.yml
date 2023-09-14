@@ -3,6 +3,7 @@ on:
   push:
     branches: 
         - develop   
+        - pre-release
         - hotfix/*        
         - feature/*  
         - bug-fix/*
@@ -10,6 +11,7 @@ on:
   pull_request:
       types: [synchronize, reopened]
       branches:
+        - pre-release
         - hotfix/*
         - feature/*  
         - bug-fix/*  
