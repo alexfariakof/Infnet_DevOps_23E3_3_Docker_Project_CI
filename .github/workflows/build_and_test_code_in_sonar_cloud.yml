@@ -22,17 +22,17 @@ jobs:
         dotnet-version: 6.0.x
 
     - name: Restore dependencies
-      run: dotnet restore Infnet_DevOps_23E3_3_Docker_Project/Infnet_DevOps_23E3_3_Docker_Project.csproj
+      run: dotnet restore
       continue-on-error: false
-
+      
     - name: Build
-      run: dotnet build Infnet_DevOps_23E3_3_Docker_Project/Infnet_DevOps_23E3_3_Docker_Project.csproj --no-restore
+      run: dotnet build --no-restore
       continue-on-error: false
-
+    
     - name: Test
-      run: dotnet test Infnet_DevOps_23E3_3_Docker_Project/Infnet_DevOps_23E3_3_Docker_Project.csproj --no-build --verbosity normal
+      run: dotnet test --no-build --verbosity normal
       continue-on-error: false
-
+  
   build_sonarcloud:
     needs: build_and_test
     name: Build Test and Analyze Code in Sonar Cloud
@@ -67,7 +67,7 @@ jobs:
           dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
       - name: Build and analyze
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          GITHUB_TOKEN: ${{ secrets.SONAR_GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
