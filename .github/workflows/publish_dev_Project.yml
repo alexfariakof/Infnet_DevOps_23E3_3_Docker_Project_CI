@@ -1,8 +1,8 @@
 name: Build Test Deploy and Publish Dev Project In AWS
-
 on:
   push:
-    branches: [ "develop" ]
+    branches:           
+        - pre-release  
 jobs:
 
   build_and_test:
@@ -16,15 +16,15 @@ jobs:
         dotnet-version: 6.0.x
 
     - name: Restore dependencies
-      run: dotnet restore Infnet_DevOps_23E3_3_Docker_Project/Infnet_DevOps_23E3_3_Docker_Project.csproj
+      run: dotnet restore
       continue-on-error: false
-
+      
     - name: Build
-      run: dotnet build Infnet_DevOps_23E3_3_Docker_Project/Infnet_DevOps_23E3_3_Docker_Project.csproj --no-restore
+      run: dotnet build --no-restore
       continue-on-error: false
-
+    
     - name: Test
-      run: dotnet test Infnet_DevOps_23E3_3_Docker_Project/Infnet_DevOps_23E3_3_Docker_Project.csproj --no-build --verbosity normal
+      run: dotnet test --no-build --verbosity normal
       continue-on-error: false
 
   build_sonarcloud:
