@@ -7,7 +7,7 @@
 
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
-    <SonarQubeTestProject>true</SonarQubeTestProject>
+    <SonarQubeTestProject>true</SonarQubeTestProject>    
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,6 +25,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <ProjectCapability Include="TestContainer" />
   </ItemGroup>
 
 </Project>
