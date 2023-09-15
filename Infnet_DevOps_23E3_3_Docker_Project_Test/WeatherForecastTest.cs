@@ -66,5 +66,22 @@ namespace Infnet_DevOps_23E3_3_Docker_Project_Test
             Assert.NotNull(result);
             Assert.IsType<WeatherForecast>(result);
         }
+
+        [Fact]
+        public void TemperatureC_CalculatesCorrectly()
+        {
+            // Arrange
+            var weatherForecast = new WeatherForecast
+            {
+                TemperatureC = 25
+            };
+
+            // Act
+            int temperatureC = weatherForecast.TemperatureC;
+
+            // Assert
+            int expectedTemperatureF = 32 + (int)(temperatureC / 0.5556);
+            Assert.Equal(expectedTemperatureF, weatherForecast.TemperatureF);
+        }
     }
 }
