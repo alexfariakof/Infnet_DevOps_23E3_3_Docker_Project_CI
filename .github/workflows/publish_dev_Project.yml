@@ -4,7 +4,6 @@ on:
     branches:           
         - develop  
 jobs:
-
   build_and_test:
     runs-on: ubuntu-latest
     steps:

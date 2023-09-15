@@ -8,8 +8,8 @@ namespace Infnet_DevOps_23E3_3_Docker_Project.Controllers
     {
         private static readonly string[] Summaries = new[]
         {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
+            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+        };
 
         private readonly ILogger<WeatherForecastController> _logger;
 
@@ -19,7 +19,7 @@ namespace Infnet_DevOps_23E3_3_Docker_Project.Controllers
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<WeatherForecast> Get()
+        public List<WeatherForecast> Get()
         {
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
@@ -27,8 +27,9 @@ namespace Infnet_DevOps_23E3_3_Docker_Project.Controllers
                 TemperatureC = Random.Shared.Next(-20, 55),
                 Summary = Summaries[Random.Shared.Next(Summaries.Length)]
             })
-            .ToArray();
+            .ToList();
         }
+
         [HttpPost(Name = "PostWeatherForecast")]
         public WeatherForecast Post()
         {
@@ -46,11 +47,22 @@ namespace Infnet_DevOps_23E3_3_Docker_Project.Controllers
         public WeatherForecast Put()
         {
             var count = 8;
-            int resultado = 10 / (count - 8);  
+
             return new WeatherForecast
             {
                 Date = DateTime.Now,
                 TemperatureC = Random.Shared.Next(-20, 55) / count,
+                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+            };
+        }
+
+        [HttpDelete(Name = "DeleteWeatherForecast")]
+        public WeatherForecast Delete()
+        {
+            return new WeatherForecast
+            {
+                Date = DateTime.Now,
+                TemperatureC = Random.Shared.Next(-20, 55),
                 Summary = Summaries[Random.Shared.Next(Summaries.Length)]
             };
         }
