@@ -4,7 +4,7 @@ on:
     branches:           
         - hotfix/*        
         - feature/*  
-        - bug-fix/*
+        - bugfix/*
         - release/*
         
   pull_request:
@@ -15,7 +15,7 @@ on:
         - pre-release
         - hotfix/*
         - feature/*  
-        - bug-fix/*          
+        - bugfix/*          
         
 permissions:
   contents: read    
