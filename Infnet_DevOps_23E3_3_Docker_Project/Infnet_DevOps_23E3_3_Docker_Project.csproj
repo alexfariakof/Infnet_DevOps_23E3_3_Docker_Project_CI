@@ -16,6 +16,7 @@
     <PackageReference Include="AspNetCore.HealthChecks.UI.Core" Version="7.0.0" />
     <PackageReference Include="AspNetCore.HealthChecks.UI.InMemory.Storage" Version="7.0.0" />
     <PackageReference Include="AspNetCore.HealthChecks.Uris" Version="7.0.0" />
+    <PackageReference Include="AWSXRayRecorder" Version="2.14.0" />
     <PackageReference Include="coverlet.collector" Version="3.2.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
