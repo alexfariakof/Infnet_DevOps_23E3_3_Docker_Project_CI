@@ -13,8 +13,6 @@ builder.Services.AddSwaggerGen();
 // Add Application Insights X-Ray AWS
 AWSXRayRecorder.InitializeInstance(builder.Configuration);
 
-
-
 //Add HelthChecks
 builder.Services.AddHealthChecks()
                 .AddMySql(
