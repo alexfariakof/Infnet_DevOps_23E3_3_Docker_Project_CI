@@ -1,3 +1,4 @@
+using Amazon.XRay.Recorder.Core;
 using HealthChecks.UI.Client;
 using Infnet_DevOps_23E3_3_Docker_Project.HealthChecks;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -7,6 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
+// Add Application Insights X-Ray AWS
+AWSXRayRecorder.InitializeInstance(builder.Configuration);
 
 //Add HelthChecks
 builder.Services.AddHealthChecks()
