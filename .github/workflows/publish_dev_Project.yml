@@ -122,7 +122,7 @@ jobs:
             docker rm --force $container_id
             docker rmi --force $image_id
             docker pull $IMAGEM            
-            docker run -d -p 42536:42536 $IMAGEM
+            docker run -d -p 42536:80 $IMAGEM
             container_id=$(docker ps -q --filter "ancestor=$IMAGEM")
             docker cp appsettings.healthchecks.dev.json $container_id:/app/appsettings.Development.json            
             docker restart $container_id
