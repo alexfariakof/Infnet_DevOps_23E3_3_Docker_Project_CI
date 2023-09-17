@@ -33,7 +33,40 @@
       "launchBrowser": true,
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
       "publishAllPorts": true,
-      "useSSL": true
+      "useSSL": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "dockerFile": "Dockerfile"
+    },
+    "Docker Development": {
+      "commandName": "Docker",
+      "launchBrowser": true,
+      "launchUrl": "{Scheme}://{ServiceHost}:42536/swagger",
+      "publishAllPorts": true,
+      "httpPort": 42536,
+      "useSSL": false,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ServicePort": "42536",
+        "DockerHttpPort": "42536"
+      },
+      "dockerFile": "Dockerfile-Development"
+    },
+    "Docker Production": {
+      "commandName": "Docker",
+      
+      "launchBrowser": true,
+      "launchUrl": "{Scheme}://{ServiceHost}:42537/healthchecks-ui",
+      "publishAllPorts": true,
+      "httpPort": 42537,
+      "useSSL": false,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Production",
+        "ServicePort": "42537",
+        "DockerHttpPort": "42537"
+      },
+      "dockerFile": "Dockerfile-Production"
     }
   },
   "$schema": "https://json.schemastore.org/launchsettings.json",
