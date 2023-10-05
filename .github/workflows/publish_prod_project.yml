@@ -1,7 +1,8 @@
 name: Build Test Deploy and Publish Production Project In AWS
 on:
   push:
-    branches: [ "main" ]
+    branches: 
+      - release/*
 jobs:
   build_and_test:
     runs-on: ubuntu-latest
@@ -63,7 +64,7 @@ jobs:
         shell: powershell
         run: |
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"alexfariakof_Infnet_DevOps_23E3_3_Docker_Project_CI" /o:"alexfariakof" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml"
-          dotnet test --collect:"XPlat Code Coverage;Format=opencover"
+          dotnet test /p:CollectCoverage=true --collect:"XPlat Code Coverage;Format=opencover"
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
         continue-on-error: false
 
@@ -74,12 +75,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Build Docker image
-        env:
-           DOCKER_CLI_AGGREGATE: 1  
-        run: |          
-          docker-compose -f docker-compose.prod.yml build          
-        continue-on-error: false
 
       - name: Push Docker image to Docker Hub
         env:
@@ -87,8 +82,9 @@ jobs:
            DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
            DOCKER_CLI_AGGREGATE: 1  
         run: |
+            docker-compose -f docker-compose.prod.yml build          
             docker login -u ${{ secrets.DOCKER_LOGIN }} -p ${{ secrets.DOCKER_PASSWORD }}    
-            docker push ${{ secrets.DOCKER_IMAGE_PROD }}
+            docker push alexfariakof/infnet-devops-project
         continue-on-error: false
 
       - name: Execute SSH Commands into EC2 
