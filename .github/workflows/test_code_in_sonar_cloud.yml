@@ -57,6 +57,6 @@ jobs:
         shell: powershell
         run: |
           dotnet tool install -g dotnet-reportgenerator-globaltool
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"alexfariakof_Infnet_DevOps_23E3_3_Docker_Project_CI" /o:"alexfariakof" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml" /d:sonar.cs.lcov.reportPaths="**/lcov.info"
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"alexfariakof_Infnet_DevOps_23E3_3_Docker_Project_CI" /o:"alexfariakof" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml" /d:sonar.cs.lcov.reportPaths="**/lcov.info" /d:sonar.exclusions="**/Program.cs"
           .\generate_coverage_report.ps1
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
