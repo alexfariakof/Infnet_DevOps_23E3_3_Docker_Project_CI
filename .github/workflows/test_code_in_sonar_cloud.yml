@@ -1,4 +1,4 @@
-name: Build Test and Analyze Code In Sonar Cloud
+name: Test and Analyze Code In Sonar Cloud
 on:
   push:
     branches:      
@@ -14,30 +14,7 @@ permissions:
   contents: read    
 
 jobs:
-  build_and_test:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
- 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 6.0.x
-
-    - name: Restore dependencies
-      run: dotnet restore
-      continue-on-error: false
-      
-    - name: Build
-      run: dotnet build --no-restore
-      continue-on-error: false
-    
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
-      continue-on-error: false
-  
-  build_sonarcloud:
-    needs: build_and_test
+  build_sonarcloud:    
     name: Build Test and Analyze Code in Sonar Cloud
     runs-on: windows-latest
     steps:
