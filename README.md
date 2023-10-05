@@ -73,7 +73,7 @@ A aplicação desenvolvida adota uma abordagem de Desenvolvimento Orientado por 
 
    - Sonar Cloud Dashboar do Projeto
      
-![SonarCloudDashboarProject](https://github.com/alexfariakof/Infnet_DevOps_23E3_3_Docker_Project_CI/assets/42475620/231e891c-3add-4876-8a23-09fb98488985)
+![SonarCloudDashboarProject](https://github.com/alexfariakof/Infnet_DevOps_23E3_3_Docker_Project_CI/assets/42475620/8e6ee3f3-bd07-4d19-9973-77e8637a71c1)
 
 ## MONITORAMETO PROATIVO EM NUVEM
 
