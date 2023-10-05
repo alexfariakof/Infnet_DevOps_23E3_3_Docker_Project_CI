@@ -65,13 +65,12 @@ jobs:
           key: ${{ runner.os }}-sonar-scanner
           restore-keys: ${{ runner.os }}-sonar-scanner
 
-      - name: Install SonarCloud scanner and Report Generator
+      - name: Install SonarCloud scanner
         if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
         shell: powershell
         run: |
           New-Item -Path .\.sonar\scanner -ItemType Directory
-          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
-          dotnet tool install -g dotnet-reportgenerator-globaltool
+          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner          
 
       - name: Build and analyze
         env:
@@ -79,6 +78,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
+          dotnet tool install -g dotnet-reportgenerator-globaltool
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"alexfariakof_Infnet_DevOps_23E3_3_Docker_Project_CI" /o:"alexfariakof" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml" /d:sonar.cs.lcov.reportPaths="**/lcov.info"
           .\generate_coverage_report.ps1
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"

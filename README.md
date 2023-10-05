@@ -30,8 +30,7 @@ Run `dotnet test` to execute the unit tests [XUnit](https://github.com/xunit/xun
 
 ## Running Unit Tests and Collect data to generate reporsts [Code Coverage](https://learn.microsoft.com/pt-br/dotnet/core/testing/unit-testing-code-coverage?tabs=windows)
 
-   > Make sure you have installed Report Generator If not Run `dotnet tool install -g dotnet-reportgenerator-globaltool` to install.    
-   
+   > Make sure you have installed Report Generator If not Run `dotnet tool install -g dotnet-reportgenerator-globaltool` to install.
    > Then If you using Powershell Run `.\generate_coverage_report.ps1` or If you using linux bash Run `generate_coverage_report.sh`.
 
 After running this command, an HTML file represents the generated report is create at root Test Project `.\TestResults\{GUID}\coveragereport\index.html`.
