@@ -55,12 +55,15 @@ A aplicação foi desenvolvida utilizando contêineres Docker e orquestrada com 
 ## IMPLEMENTAÇÃO DE INTEGRAÇÃO E ENTREGA CONTÍNUA EM NUVEM
 
 Foram criados 3 arquivos de configuração do GitHub Actions seguindo o fluxo git flow implementando uma esteira de integração e entrega contínua:
-    * Test and Analyze Code In Sonar Cloud
-        > Este arquivo configura uma automação no GitHub Actions para construir, testar e analisar código em um projeto. Ele é acionado em "push" e "pull_request" para as branches "main", "develop", "hotfix/", "feature/" e "bugfix/*". A análise é realizada usando o SonarCloud.    
-    * Build Test Deploy and Publish Dev Project In AWS
-        > Este arquivo configura uma automação no GitHub Actions para construir, testar, implantar e publicar um projeto de desenvolvimento na AWS. É acionado em "push" para a branch "pre-release". A implantação é feita usando Docker e instâncias EC2 da AWS.    
-    * Build Test Deploy and Publish Production Project In AWS        
-        > Este arquivo configura uma automação no GitHub Actions para construir, testar, implantar e publicar um projeto de produção na AWS. É acionado apenas quando há "push" em branch "release/*". A implantação é feita usando Docker e instâncias EC2 da AWS.
+    
+* Test and Analyze Code In Sonar Cloud
+  > Este arquivo configura uma automação no GitHub Actions para construir, testar e analisar código em um projeto. Ele é acionado em "push" e "pull_request" para as branches "main", "develop", "hotfix/", "feature/" e "bugfix/*". A análise é realizada usando o SonarCloud.    
+    
+* Build Test Deploy and Publish Dev Project In AWS
+  > Este arquivo configura uma automação no GitHub Actions para construir, testar, implantar e publicar um projeto de desenvolvimento na AWS. É acionado em "push" para a branch "pre-release". A implantação é feita usando Docker e instâncias EC2 da AWS.    
+
+* Build Test Deploy and Publish Production Project In AWS        
+  > Este arquivo configura uma automação no GitHub Actions para construir, testar, implantar e publicar um projeto de produção na AWS. É acionado apenas quando há "push" em branch "release/*". A implantação é feita usando Docker e instâncias EC2 da AWS.
 
 ## TEST-DRIVEN DEVELOPMENT WITH SONAR CLOUD INTEGRATION
 
