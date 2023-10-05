@@ -18,6 +18,3 @@ if ($latestDir -ne $null) {
 else {
     Write-Host "Nenhum diretório de resultados encontrado."
 } 
-
-
-
