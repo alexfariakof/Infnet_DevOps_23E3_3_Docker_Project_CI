@@ -8,7 +8,11 @@ This project can be access at :
 
    > [Health Checks UI](http://alexfariakof.com:42536/healthchecks-ui).
 
+![healthChecksjpg](https://github.com/alexfariakof/Infnet_DevOps_23E3_3_Docker_Project_CI/assets/42475620/47f09ba6-9020-4f28-93a6-d7d329dea7a8)
+
    > [Swagger UI](http://alexfariakof.com:42536/swagger).
+
+![swagger-ui](https://github.com/alexfariakof/Infnet_DevOps_23E3_3_Docker_Project_CI/assets/42475620/6b1f2338-5d6a-478b-bb9d-ce3be5554710)
 
    > [Endpoint API](http://alexfariakof.com:42536/WeatherForecast).
 
@@ -68,6 +72,23 @@ Foram criados 3 arquivos de configuração do GitHub Actions seguindo o fluxo gi
 
 A aplicação desenvolvida adota uma abordagem de Desenvolvimento Orientado por Testes (TDD), incorporando testes unitários para garantir a qualidade do código. Além disso, a integração com o SonarCloud inclui análises abrangentes, que abrangem a cobertura de código, auxiliando na melhoria contínua da qualidade do software. [Overview Project in Sonar Cloud](https://sonarcloud.io/project/overview?id=alexfariakof_Infnet_DevOps_23E3_3_Docker_Project_CI).
 
+   - Sonar Cloud Dashboar do Projeto
+     
+![SonarCloudDashboarProject](https://github.com/alexfariakof/Infnet_DevOps_23E3_3_Docker_Project_CI/assets/42475620/231e891c-3add-4876-8a23-09fb98488985)
+
 ## MONITORAMETO PROATIVO EM NUVEM
 
 A aplicação está sendo monitorada de forma proativa na nuvem, através da implementação de Health Checks e da integração com o Azure Application Insights. Isso permite o acompanhamento em tempo real do desempenho, disponibilidade e integridade da aplicação, garantindo uma experiência confiável para os usuários e facilitando a detecção precoce de problemas.
+A aplicação está sendo monitorada de forma proativa na nuvem, através da implementação de Health Checks e da integração com o Azure Application Insights. Isso permite o acompanhamento em tempo real do desempenho, disponibilidade e integridade da aplicação, garantindo uma experiência confiável para os usuários e facilitando a detecção precoce de problemas.
+
+![AzureApplicationInsights-01](https://github.com/alexfariakof/Infnet_DevOps_23E3_3_Docker_Project_CI/assets/42475620/325e8691-0145-480a-95ec-bf2b65ee19cc)
+
+![AzureApplicationInsights-02](https://github.com/alexfariakof/Infnet_DevOps_23E3_3_Docker_Project_CI/assets/42475620/5f2f0924-574d-4edc-9b87-f6ee5d8d0717)
+
+![AzureApplicationInsights-03](https://github.com/alexfariakof/Infnet_DevOps_23E3_3_Docker_Project_CI/assets/42475620/c8f78e69-ed7f-48ff-ab47-beaac7cc6b56)
+
+![AzureApplicationInsights-04](https://github.com/alexfariakof/Infnet_DevOps_23E3_3_Docker_Project_CI/assets/42475620/5383f44e-a514-424d-be07-83be53a4d776)
+
+![AzureApplicationInsights-05](https://github.com/alexfariakof/Infnet_DevOps_23E3_3_Docker_Project_CI/assets/42475620/7d76d75f-5bfe-46fa-ac98-f05886e49229)
+
+![AzureApplicationInsights-06](https://github.com/alexfariakof/Infnet_DevOps_23E3_3_Docker_Project_CI/assets/42475620/bcf2ab33-44d8-4cc2-85e7-8461106a7085)
