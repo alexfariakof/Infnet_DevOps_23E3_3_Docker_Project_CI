@@ -2,6 +2,7 @@ name: Test and Analyze Code In Sonar Cloud
 on:
   push:
     branches:      
+        - main
         - develop
         - hotfix/*        
         - feature/*  

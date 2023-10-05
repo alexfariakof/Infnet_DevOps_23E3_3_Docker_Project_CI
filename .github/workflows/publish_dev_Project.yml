@@ -2,7 +2,7 @@ name: Build Test Deploy and Publish Dev Project In AWS
 on:
   push:
     branches:           
-        - pre-release/*  
+        - pre-release  
 jobs:
   build_and_test:
     runs-on: ubuntu-latest
