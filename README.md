@@ -1,4 +1,4 @@
-# TRABALHO DE INTEGRAÇÃO CONTÍNUA E DEVOPS
+# TRABALHO DE INTEGRAÇÃO E ENTREGA CONTÍNUA / DEVOPS
 
 This project was generated with [Microsoft .NET Plataform](https://github.com/dotnet) version 6.0.
 
@@ -75,7 +75,7 @@ A aplicação desenvolvida adota uma abordagem de Desenvolvimento Orientado por 
      
 ![SonarCloudDashboarProject](https://github.com/alexfariakof/Infnet_DevOps_23E3_3_Docker_Project_CI/assets/42475620/8e6ee3f3-bd07-4d19-9973-77e8637a71c1)
 
-## MONITORAMETO PROATIVO EM NUVEM
+## MONITORAMENTO PROATIVO EM NUVEM
 
 A aplicação está sendo monitorada de forma proativa na nuvem, através da implementação de Health Checks e da integração com o Azure Application Insights. Isso permite o acompanhamento em tempo real do desempenho, disponibilidade e integridade da aplicação, garantindo uma experiência confiável para os usuários e facilitando a detecção precoce de problemas.
 A aplicação está sendo monitorada de forma proativa na nuvem, através da implementação de Health Checks e da integração com o Azure Application Insights. Isso permite o acompanhamento em tempo real do desempenho, disponibilidade e integridade da aplicação, garantindo uma experiência confiável para os usuários e facilitando a detecção precoce de problemas.
